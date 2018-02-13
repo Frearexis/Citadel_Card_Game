@@ -10,8 +10,10 @@ public class Player {
     private int playerGold;
     private Character choosenCharacter;
     private ArrayList<District> districtsInHand;
+    private ArrayList<District> finishedDistricts;
     private int finishedDistrictsCounter;
     private int indexOnPlayersList;
+    private int finalScore;
     private boolean king;
     private boolean AI;
 
@@ -21,6 +23,7 @@ public class Player {
         this.playerGold = 2;
         this.choosenCharacter = null;
         this.districtsInHand = districtsInHand;
+        this.finishedDistricts = new ArrayList<>();
         this.finishedDistrictsCounter = 0;
         this.indexOnPlayersList = indexOnPlayersList;
         this.king = false;

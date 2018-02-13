@@ -115,13 +115,61 @@ public class Game {
     private void checkWinConditions(){
         for(int i = 0; i < players.size(); i++){
             if(players.get(i).getFinishedDistrictsCounter() == 8){
-                Ended = true;
-                System.out.println("Player "+ players.get(i) );
+                //System.out.println("Player "+ players.get(i) + "won the game with " + countPointsForAllPlayers() + " points");
             }
         }
     }
 
-    private void countPointsForDistricts(){
+    private void countPointsForAllPlayers(){
+        for(Player player : players){
+            player.setFinalScore(
+                    countPointsForGoldLeft(player)
+                    +countPointsFromDistrictsLeftInHand(player)
+                    +countPointsFromDistrictsBuilded(player)
+                    +districtsInAllColorsBonus(player));
+        }
+    }
 
+    private int countPointsForGoldLeft(Player player){
+        return player.getPlayerGold();
+    }
+
+    private int countPointsFromDistrictsLeftInHand(Player player){
+        return player.getDistrictsInHand().size();
+    }
+
+    private int countPointsFromDistrictsBuilded(Player player){
+        int sum = 0;
+        for(District district : player.getFinishedDistricts()){
+            sum += district.getDistrictCost();
+        }
+        return sum;
+    }
+
+    private int districtsInAllColorsBonus(Player player){
+        int score = 0;
+        boolean hasGoldDistrict = false;
+        boolean hasPurpleDistrict = false;
+        boolean hasGreenDistrict = false;
+        boolean hasBlueDistrict = false;
+        boolean hasRedDistrict = false;
+        for(District district : player.getFinishedDistricts()){
+            switch (district.getCardColor()){
+                case "gold":    hasGoldDistrict = true;
+                    break;
+                case "purple":  hasPurpleDistrict = true;
+                    break;
+                case "green":   hasGreenDistrict = true;
+                    break;
+                case "blue":    hasBlueDistrict = true;
+                    break;
+                case "red":     hasRedDistrict = true;
+                    break;
+            }
+       }
+       if(hasGoldDistrict && hasPurpleDistrict && hasGreenDistrict && hasBlueDistrict && hasRedDistrict){
+            score = 20;
+       }
+       return score;
     }
 }
