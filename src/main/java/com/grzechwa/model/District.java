@@ -5,7 +5,7 @@ import lombok.ToString;
 
 @Data
 @ToString(callSuper=true)
-public class District extends Card {
+public abstract class District extends Card {
     private int districtCost;
 
     public District(String cardName,

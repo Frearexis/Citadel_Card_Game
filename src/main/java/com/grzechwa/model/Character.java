@@ -1,11 +1,13 @@
 package com.grzechwa.model;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
-@Data
+@Getter
+@Setter
 @ToString(callSuper=true)
-public class Character extends Card {
+public abstract class Character extends Card {
     private int turnOfAppearance;
     private boolean isKilled;
     private boolean isDiscarded;
@@ -18,10 +20,10 @@ public class Character extends Card {
                      boolean isKilled,
                      boolean isDiscarded,
                      boolean isOnCharacterPile) {
-        super(cardName,cardColor,isVisible);
-        this.turnOfAppearance = turnOfAppearance;
-        this.isKilled = isKilled;
-        this.isDiscarded = isDiscarded;
-        this.isOnCharacterPile = isOnCharacterPile;
+                    super(cardName,cardColor,isVisible);
+                    this.turnOfAppearance = turnOfAppearance;
+                    this.isKilled = isKilled;
+                    this.isDiscarded = isDiscarded;
+                    this.isOnCharacterPile = isOnCharacterPile;
     }
 }

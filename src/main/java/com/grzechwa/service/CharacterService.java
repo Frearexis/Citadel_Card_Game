@@ -8,8 +8,8 @@ import java.util.Arrays;
 import java.util.Random;
 
 public class CharacterService {
-    private ArrayList<Character> charactersVisibleToAll;
-    private ArrayList<Character> charactersPossibleToPick;
+    private static ArrayList<Character> charactersVisibleToAll;
+    private static ArrayList<Character> charactersPossibleToPick;
 
     private static final Architect ARCHITECT = new Architect();
     private static final Assassin ASSASSIN = new Assassin();
@@ -35,9 +35,9 @@ public class CharacterService {
             charactersVisibleToAll.add(removeAndReturnCharacter(getNotAKingCharacterFromList()));
         }
         System.out.println("Visible Characters ");
-        charactersVisibleToAll.forEach(s->System.out.println(s.getCardName()));
+            charactersVisibleToAll.forEach(s->System.out.println("\t"+s.getCardName()));
         System.out.println("Characters possible to pick ");
-        charactersPossibleToPick.forEach(s->System.out.println(s.getCardName()));
+            charactersPossibleToPick.forEach(s->System.out.println("\t"+s.getCardName()));
     }
 
     public ArrayList<Character> getCharactersPossibleToPick(){
@@ -46,6 +46,14 @@ public class CharacterService {
 
     public Character getRandomCharacterAndRemove(){
        return removeAndReturnCharacter(getRandomCharacterFromList());
+    }
+
+    public static int getTheHighestRankAmongCharacters(){
+        int highestRank = 1;
+        for(Character character : charactersPossibleToPick){
+            highestRank = (character.getTurnOfAppearance() > highestRank) ? character.getTurnOfAppearance() : highestRank;
+        }
+        return highestRank;
     }
 
     private Character removeAndReturnCharacter(Character characterToRemove){

@@ -19,9 +19,9 @@ public class Player {
     private boolean AI;
 
     public Player(){}
-    public Player(String name, ArrayList<District>  districtsInHand,int indexOnPlayersList, boolean AI){
+    public Player(String name, int playerGold, ArrayList<District>  districtsInHand,int indexOnPlayersList, boolean AI){
         this.playerName = name;
-        this.playerGold = 2;
+        this.playerGold = playerGold;
         this.choosenCharacter = null;
         this.districtsInHand = districtsInHand;
         this.finishedDistricts = new ArrayList<>();
