@@ -9,3 +9,6 @@ For now basic logic is under development.
 * [Junit](https://junit.org/junit4/) - Junit framework for tests
 * [Hamcrest](http://hamcrest.org/JavaHamcrest/) - Testing usage
 
+## About
+Thanks to this project I'm able to practice OOP and clean code rules. Hopefully after some time it will grow bigger. It's obvious that I make mistakes - feel free to inform me about them under email: vesperon[at]o2.pl
+
