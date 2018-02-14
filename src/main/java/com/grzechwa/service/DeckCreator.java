@@ -28,8 +28,7 @@ public class DeckCreator {
     }
 
     private static void fillShuffleDeck(){
-        SHUFFELED_FILLED_DECK.addAll(Arrays.asList(
-                CASTLE,DRAGON_GATE,HARBOR,MANOR,MARKET,MONASTERY,PRISON,TOWN_HALL));
+        SHUFFELED_FILLED_DECK.addAll(Arrays.asList(CASTLE,DRAGON_GATE,HARBOR,MANOR,MARKET,MONASTERY,PRISON,TOWN_HALL));
         SHUFFELED_FILLED_DECK = shuffleDeck(multipleDistricts(SHUFFELED_FILLED_DECK));
     }
 

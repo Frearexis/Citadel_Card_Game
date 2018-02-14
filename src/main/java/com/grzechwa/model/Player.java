@@ -14,6 +14,7 @@ public class Player {
     private int finishedDistrictsCounter;
     private int indexOnPlayersList;
     private int finalScore;
+    private boolean firstWith8Districts;
     private boolean king;
     private boolean AI;
 
@@ -26,6 +27,7 @@ public class Player {
         this.finishedDistricts = new ArrayList<>();
         this.finishedDistrictsCounter = 0;
         this.indexOnPlayersList = indexOnPlayersList;
+        this.firstWith8Districts = false;
         this.king = false;
         this.AI = AI;
     }
