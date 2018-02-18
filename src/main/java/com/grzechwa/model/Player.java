@@ -2,7 +2,9 @@ package com.grzechwa.model;
 
 import lombok.Data;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 @Data
 public class Player {
@@ -30,5 +32,13 @@ public class Player {
         this.firstWith8Districts = false;
         this.king = false;
         this.AI = AI;
+    }
+
+    public void addGold(int amountToAdd){
+        playerGold+=amountToAdd;
+    }
+
+    public void addDistricts(ArrayList<District> districtsToAdd){
+        districtsInHand.addAll(districtsToAdd);
     }
 }

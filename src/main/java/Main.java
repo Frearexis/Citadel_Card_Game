@@ -1,5 +1,6 @@
 
 import com.grzechwa.model.Game;
+import com.grzechwa.model.GameInitializer;
 import com.grzechwa.service.CharacterService;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -22,12 +23,12 @@ public class Main extends Application {
         primaryStage.setResizable(false);
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
-        Game game = new Game(3,"Gesok");
+        Game game = new GameInitializer(3,"Gesok").initialize();
 
         while(!game.hasEnded()){
             game.choosingCharacterPhase();
-            /*game.resolvingCharacterPhase();
-            game.checkWinConditions(); */
+            //game.resolvingCharacterPhase();
+            //game.checkWinConditions();
             game.setEnded(true);
         }
 

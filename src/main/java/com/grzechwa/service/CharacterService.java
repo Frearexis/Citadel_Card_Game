@@ -48,7 +48,7 @@ public class CharacterService {
        return removeAndReturnCharacter(getRandomCharacterFromList());
     }
 
-    public static int getTheHighestRankAmongCharacters(){
+    public static int getTheHighestRankAmongAllCharacters(){
         int highestRank = 1;
         for(Character character : charactersPossibleToPick){
             highestRank = (character.getTurnOfAppearance() > highestRank) ? character.getTurnOfAppearance() : highestRank;

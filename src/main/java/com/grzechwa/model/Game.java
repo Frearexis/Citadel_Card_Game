@@ -1,37 +1,31 @@
 package com.grzechwa.model;
 
-import com.grzechwa.service.CharacterService;
-import com.grzechwa.service.CountFinalScoreService;
-import com.grzechwa.service.DeckService;
-import com.grzechwa.service.KingshipService;
-import lombok.Getter;
+import com.grzechwa.model.cards.character.King;
+import com.grzechwa.service.*;
 import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Random;
 
 public class Game {
     private DeckService deckService;
     private CharacterService characterService;
     private KingshipService kingshipService;
+    private AI_DecisionsService ai_decisionsService;
     private CountFinalScoreService countFinalScoreService;
-    private int numberOfAIPlayers;
-    @Getter private ArrayList<Player> players;
+    private ArrayList<Player> players;
+    private Random random;
     @Setter private boolean Ended = false;
-    private static int highestRankAmongCharacters;
-    private static final int STARTING_GOLD_VALUE = 2;
-    private static final int STARTING_DISTRICT_CARDS_VALUE = 4;
 
-    public Game(int numberOfAllPlayers,String... playersNames){
+    public Game(ArrayList<Player> players){
+        this.players = players;
         deckService = new DeckService();
         characterService = new CharacterService();
-        players = new ArrayList<>();
-        kingshipService = new KingshipService(players);
-        countFinalScoreService = new CountFinalScoreService(players);
-        numberOfAIPlayers = numberOfAllPlayers - playersNames.length;
-        createHumanPlayers(playersNames);
-        createAIPlayers();
-        kingshipService.setKingRandomly();
-        Game.highestRankAmongCharacters = CharacterService.getTheHighestRankAmongCharacters();
+        kingshipService = new KingshipService(this.players);
+        ai_decisionsService = new AI_DecisionsService();
+        countFinalScoreService = new CountFinalScoreService(this.players);
+        random = new Random();
     }
 
     public boolean hasEnded(){
@@ -40,26 +34,42 @@ public class Game {
 
     public void choosingCharacterPhase(){
         characterService.generateCharactersToChooseFrom();
-        ArrayList<Player> playersInOrderOfPlay = getPlayersInOrder(players);
+        ArrayList<Player> playersInOrderOfPlay = getPlayersStartingFromKing(players);
         Player currentPlayer;
 
         for(int i = 0; i < playersInOrderOfPlay.size(); i++) {
             currentPlayer = playersInOrderOfPlay.get(i);
             if (currentPlayer.isAI() && currentPlayer.getChoosenCharacter() == null) {
                 System.out.println(currentPlayer.getPlayerName()+" choosing character turn");
-                currentPlayer.setChoosenCharacter(characterService.getRandomCharacterAndRemove());
+                    currentPlayer.setChoosenCharacter(characterService.getRandomCharacterAndRemove());
                 System.out.println("\t choose " + currentPlayer.getChoosenCharacter().getCardName());
             } else if (!currentPlayer.isAI() && currentPlayer.getChoosenCharacter() == null) {
                 System.out.println(currentPlayer.getPlayerName()+" choosing character turn");
-                currentPlayer.setChoosenCharacter(characterService.getRandomCharacterAndRemove());
+                    currentPlayer.setChoosenCharacter(characterService.getRandomCharacterAndRemove());
                 System.out.println("\t choose " + currentPlayer.getChoosenCharacter().getCardName());
             }
         }
     }
-
+    //for now both player and AI turns are merged. It will change once basic logic will be finished.
     public void resolvingCharacterPhase(){
-        for(int i = 1; i <= highestRankAmongCharacters; i++ ){
-
+        ArrayList<Player> playersFromFirstToLastThisPhase = getPlayersInOrderOfCharactersAppearance(players);
+        for(Player player: playersFromFirstToLastThisPhase){
+            if (!player.getChoosenCharacter().isKilled()){
+                if(player.getChoosenCharacter() instanceof King && !player.isKing()){
+                    kingshipService.removeKing();
+                    kingshipService.setKing(player);
+                    setGoldOrDistrictRandomly(player);
+                    ai_decisionsService.play(player,player.getChoosenCharacter());
+                }else{
+                    setGoldOrDistrictRandomly(player);
+                    ai_decisionsService.play(player,player.getChoosenCharacter());
+                }
+            }else{
+                System.out.println("Player "+ player.getPlayerName() + " is dead, turn moves forward");
+            }
+        }
+        for(Player player: playersFromFirstToLastThisPhase){
+            player.setChoosenCharacter(null);
         }
     }
 
@@ -73,26 +83,29 @@ public class Game {
         }
     }
 
-    private void createHumanPlayers(String[] playersNames){
-        for(int i = 0; i < playersNames.length; i++) {
-            players.add(new Player(playersNames[i],STARTING_GOLD_VALUE, new ArrayList<District> (deckService.drawDistricts(STARTING_DISTRICT_CARDS_VALUE)),i, false));
+    private void setGoldOrDistrictRandomly(Player player){
+        if(random.nextInt(2) == 0){
+            player.addGold(2);
+        }else{
+            player.addDistricts(deckService.drawDistricts(1));
         }
     }
 
-    private void createAIPlayers(){
-        if(numberOfAIPlayers > 0){
-            for(int i = 0; i < numberOfAIPlayers; i++){
-                players.add(new Player("AI "+i,STARTING_GOLD_VALUE,new ArrayList<> (deckService.drawDistricts(STARTING_DISTRICT_CARDS_VALUE)),players.size()+1, true));
-            }
-        }
-    }
-
-    private ArrayList<Player> getPlayersInOrder(ArrayList<Player> players){
-        System.out.println("King before rearanging the list "+ kingshipService.getKing().getPlayerName());
+    private ArrayList<Player> getPlayersStartingFromKing(ArrayList<Player> players){
+        System.out.println("King before sorting the list "+ kingshipService.getKing().getPlayerName());
         ArrayList<Player> orderedPlayersList = new ArrayList<>(players.subList(kingshipService.getKingIndex(),players.size()));
         ArrayList<Player> secondPart = new ArrayList<>(players.subList(0,kingshipService.getKingIndex()));
         orderedPlayersList.addAll(secondPart);
         System.out.println("King after sorting list "+ orderedPlayersList.get(0).getPlayerName());
         return orderedPlayersList;
+    }
+
+    private ArrayList<Player> getPlayersInOrderOfCharactersAppearance(ArrayList<Player> players){
+        System.out.println("List before sorting");
+        players.forEach(player -> System.out.println("\t"+player.getPlayerName() + " " + player.getChoosenCharacter().getCardName()+ " " + player.getChoosenCharacter().getTurnOfAppearance()));
+        players.sort(Comparator.comparing(player -> player.getChoosenCharacter().getTurnOfAppearance()));
+        System.out.println("List after sorting. Starting from the earliest turn of appearance");
+        players.forEach(player -> System.out.println("\t"+player.getPlayerName() + " " + player.getChoosenCharacter().getCardName()+ " " + player.getChoosenCharacter().getTurnOfAppearance()));
+        return players;
     }
 }
