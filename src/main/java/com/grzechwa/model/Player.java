@@ -5,6 +5,7 @@ import lombok.Data;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 
 @Data
 public class Player {
@@ -38,7 +39,33 @@ public class Player {
         playerGold+=amountToAdd;
     }
 
-    public void addDistricts(ArrayList<District> districtsToAdd){
+    public void removeGold(int amountToRemove){
+        playerGold+=amountToRemove;
+    }
+
+    public void addDistrictsToHand(ArrayList<District> districtsToAdd){
         districtsInHand.addAll(districtsToAdd);
+    }
+
+    public void removeDistrictFromHand(District districtToRemove){
+        getDistrictsInHand().remove(districtToRemove);
+    }
+
+    public void addDistrictToFinished(District districtToAdd){
+        finishedDistricts.add(districtToAdd);
+    }
+
+    public void removeDistrictFromFinished(District districtToRemove){
+        finishedDistricts.remove(districtToRemove);
+    }
+
+    public District getCheapestDistrictInHand(){
+        Collections.sort(districtsInHand);
+        return  districtsInHand.get(0);
+    }
+
+    public District getExpensiveDistrictInHand(){
+        Collections.sort(districtsInHand,Collections.reverseOrder());
+        return  districtsInHand.get(0);
     }
 }

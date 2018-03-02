@@ -5,7 +5,7 @@ import lombok.ToString;
 
 @Data
 @ToString(callSuper=true)
-public abstract class District extends Card {
+public abstract class District extends Card implements Comparable<District> {
     private int districtCost;
 
     public District(String cardName,
@@ -14,5 +14,10 @@ public abstract class District extends Card {
                     int districtCost){
         super(cardName,cardColor,isVisible);
         this.districtCost = districtCost;
+    }
+
+    @Override
+    public int compareTo(District district){
+        return Integer.compare(districtCost,district.districtCost);
     }
 }

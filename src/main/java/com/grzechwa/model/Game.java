@@ -23,7 +23,7 @@ public class Game {
         deckService = new DeckService();
         characterService = new CharacterService();
         kingshipService = new KingshipService(this.players);
-        ai_decisionsService = new AI_DecisionsService();
+        ai_decisionsService = new AI_DecisionsService(deckService);
         countFinalScoreService = new CountFinalScoreService(this.players);
         random = new Random();
     }
