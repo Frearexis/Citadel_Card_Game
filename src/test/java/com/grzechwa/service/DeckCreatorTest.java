@@ -11,7 +11,6 @@ public class DeckCreatorTest {
     @Test
     public void createDeckTest() throws Exception{
         DeckCreator dc = new DeckCreator();
-        Deck deck = dc.createDeck();
-
+        Deck deck = dc.createStartingDeck();
     }
 }

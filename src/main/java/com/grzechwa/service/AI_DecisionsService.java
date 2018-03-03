@@ -3,7 +3,6 @@ package com.grzechwa.service;
 import com.grzechwa.model.District;
 import com.grzechwa.model.Player;
 
-import java.util.Collections;
 import java.util.Random;
 
 public class AI_DecisionsService {
@@ -37,7 +36,7 @@ public class AI_DecisionsService {
         }
     }
 
-    private int takeGoldForDistrictsBuilded(Player player){
+    private int countGoldForDistrictsBuilded(Player player){
         int colorMatchCounter = 0;
         for(District district : player.getFinishedDistricts()){
             if(player.getChoosenCharacter().getCardColor().equals(district.getCardColor())){
@@ -72,8 +71,22 @@ public class AI_DecisionsService {
     }
 
     private void playAsArchitect(Player player) {
-        buildDistrict(player);
-        deckService.drawDistricts(2)
+        buildCheapDistrict(player);
+        deckService.drawDistricts(2);
     }
 
+    private void playAsAssassin(Player player) {
+    }
+    private void playAsBishop(Player player) {
+    }
+    private void playAsGeneral(Player player) {
+    }
+    private void playAsKing(Player player) {
+    }
+    private void playAsMagician(Player player) {
+    }
+    private void playAsMerchant(Player player) {
+    }
+    private void playAsThief(Player player) {
+    }
 }

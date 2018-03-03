@@ -59,10 +59,10 @@ public class Game {
                     kingshipService.removeKing();
                     kingshipService.setKing(player);
                     setGoldOrDistrictRandomly(player);
-                    ai_decisionsService.play(player,player.getChoosenCharacter());
+                    ai_decisionsService.play(player);
                 }else{
                     setGoldOrDistrictRandomly(player);
-                    ai_decisionsService.play(player,player.getChoosenCharacter());
+                    ai_decisionsService.play(player);
                 }
             }else{
                 System.out.println("Player "+ player.getPlayerName() + " is dead, turn moves forward");
@@ -87,7 +87,7 @@ public class Game {
         if(random.nextInt(2) == 0){
             player.addGold(2);
         }else{
-            player.addDistricts(deckService.drawDistricts(1));
+            player.addDistrictsToHand(deckService.drawDistricts(1));
         }
     }
 

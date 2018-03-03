@@ -12,7 +12,7 @@ public class DeckService {
 
     public DeckService(){
         this.deckCreator = new DeckCreator();
-        this.deck = deckCreator.createDeck();
+        this.deck = deckCreator.createStartingDeck();
     }
 
     public void addDistrictsToHand(Player player, int amount){
