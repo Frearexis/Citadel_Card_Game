@@ -7,14 +7,19 @@ import java.util.Random;
 
 public class AI_DecisionsService {
     private DeckService deckService;
+    private CharacterService characterService;
+    private KillingService killingService;
+    private PlayerService playerService;
     private Random random;
 
-    public AI_DecisionsService(DeckService deckService){
+    public AI_DecisionsService(DeckService deckService, CharacterService characterService, PlayerService playerService){
         this.deckService = deckService;
+        this.characterService = characterService;
+        this.playerService = playerService;
+        this.killingService = new KillingService(characterService);
         this.random = new Random();
     }
 
-    //TODO: Implement switch statement for each possible character and his simplified playstyle in other methods in this class.
     public void play(Player player){
         switch (player.getChoosenCharacter().getCardName()){
             case "Architect" : playAsArchitect(player);
@@ -46,38 +51,38 @@ public class AI_DecisionsService {
         return colorMatchCounter;
     }
 
-    private void buildExpensiveDistrict(Player player){
-        if(playerCanBuild(player)){
-            //Collections.sort(player.getDistrictsInHand());
-            //player.getDistrictsInHand().forEach(s ->System.out.println(s.getCardName() + " " + s.getDistrictCost()));
-            for(District district : player.getDistrictsInHand()){
-                if(district.getDistrictCost() <= player.getPlayerGold()){
-                    player.removeGold(district.getDistrictCost());
-                    player.removeDistrictFromHand(district);
-                    player.addDistrictToFinished(district);
-                    player.setFinishedDistrictsCounter(player.getFinishedDistrictsCounter()+1);
-                }
-                break;
-            }
+    private void buildChoosenDistrict(Player player, District district){
+        if(district.getDistrictCost() <= player.getPlayerGold()){
+            player.removeGold(district.getDistrictCost());
+            player.removeDistrictFromHand(district);
+            player.addDistrictToFinished(district);
+            player.setFinishedDistrictsCounter(player.getFinishedDistrictsCounter()+1);
         }
     }
 
-    private void buildCheapDistrict(Player player){
-
-    }
-
     private boolean playerCanBuild(Player player){
-        return player.getDistrictsInHand().size() > 0 && player.getPlayerGold() > 0;
+        return player.getDistrictsInHand().size() > 0 && player.getPlayerGold() > 0 && player.getFinishedDistrictsCounter() <8;
     }
 
     private void playAsArchitect(Player player) {
-        buildCheapDistrict(player);
-        deckService.drawDistricts(2);
+        for(int i = 0; i < 3; i++){
+            if(playerCanBuild(player)){
+                buildChoosenDistrict(player,player.getCheapestDistrictInHand());
+            }
+            break;
+        }
+        player.addDistrictsToHand(deckService.drawDistricts(2));
     }
 
     private void playAsAssassin(Player player) {
+        killingService.killRandomCharacter();
+        buildChoosenDistrict(player,player.getExpensiveDistrictInHand());
     }
     private void playAsBishop(Player player) {
+        player.addGold(countGoldForDistrictsBuilded(player));
+        if(playerCanBuild(player)){
+            buildChoosenDistrict(player,player.getExpensiveDistrictInHand());
+        }
     }
     private void playAsGeneral(Player player) {
     }

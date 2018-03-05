@@ -8,10 +8,11 @@ import lombok.ToString;
 @Setter
 @ToString(callSuper=true)
 public abstract class Character extends Card {
+    private Player currentOwner;
     private int turnOfAppearance;
     private boolean isKilled;
     private boolean isDiscarded;
-    private boolean isOnCharacterPile;
+    private boolean isOnVisibleCharactersPile;
 
     public Character(String cardName,
                      String cardColor,
@@ -19,11 +20,11 @@ public abstract class Character extends Card {
                      int turnOfAppearance,
                      boolean isKilled,
                      boolean isDiscarded,
-                     boolean isOnCharacterPile) {
+                     boolean isOnVisibleCharactersPile) {
                     super(cardName,cardColor,isVisible);
                     this.turnOfAppearance = turnOfAppearance;
                     this.isKilled = isKilled;
                     this.isDiscarded = isDiscarded;
-                    this.isOnCharacterPile = isOnCharacterPile;
+                    this.isOnVisibleCharactersPile = isOnVisibleCharactersPile;
     }
 }

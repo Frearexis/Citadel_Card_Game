@@ -9,22 +9,22 @@ import java.util.Comparator;
 import java.util.Random;
 
 public class Game {
+    private PlayerService playerService;
     private DeckService deckService;
-    private CharacterService characterService;
     private KingshipService kingshipService;
+    private CharacterService characterService;
     private AI_DecisionsService ai_decisionsService;
     private CountFinalScoreService countFinalScoreService;
-    private ArrayList<Player> players;
     private Random random;
     @Setter private boolean Ended = false;
 
-    public Game(ArrayList<Player> players){
-        this.players = players;
-        deckService = new DeckService();
+    public Game(PlayerService playerService, DeckService deckService, KingshipService kingshipService){
+        this.playerService = playerService;
+        this.deckService = deckService;
+        this.kingshipService = kingshipService;
         characterService = new CharacterService();
-        kingshipService = new KingshipService(this.players);
-        ai_decisionsService = new AI_DecisionsService(deckService);
-        countFinalScoreService = new CountFinalScoreService(this.players);
+        ai_decisionsService = new AI_DecisionsService(deckService,characterService,playerService);
+        countFinalScoreService = new CountFinalScoreService(playerService.getPlayers());
         random = new Random();
     }
 
@@ -34,25 +34,27 @@ public class Game {
 
     public void choosingCharacterPhase(){
         characterService.generateCharactersToChooseFrom();
-        ArrayList<Player> playersInOrderOfPlay = getPlayersStartingFromKing(players);
+        ArrayList<Player> playersInOrderOfPlay = getPlayersStartingFromKing(playerService.getPlayers());
         Player currentPlayer;
 
         for(int i = 0; i < playersInOrderOfPlay.size(); i++) {
             currentPlayer = playersInOrderOfPlay.get(i);
             if (currentPlayer.isAI() && currentPlayer.getChoosenCharacter() == null) {
                 System.out.println(currentPlayer.getPlayerName()+" choosing character turn");
-                    currentPlayer.setChoosenCharacter(characterService.getRandomCharacterAndRemove());
+                    currentPlayer.setChoosenCharacter(characterService.getRandomCharacterFromPossibleToPick());
+                    currentPlayer.getChoosenCharacter().setCurrentOwner(currentPlayer);
                 System.out.println("\t choose " + currentPlayer.getChoosenCharacter().getCardName());
             } else if (!currentPlayer.isAI() && currentPlayer.getChoosenCharacter() == null) {
                 System.out.println(currentPlayer.getPlayerName()+" choosing character turn");
-                    currentPlayer.setChoosenCharacter(characterService.getRandomCharacterAndRemove());
+                    currentPlayer.setChoosenCharacter(characterService.getRandomCharacterFromPossibleToPick());
+                    currentPlayer.getChoosenCharacter().setCurrentOwner(currentPlayer);
                 System.out.println("\t choose " + currentPlayer.getChoosenCharacter().getCardName());
             }
         }
     }
     //for now both player and AI turns are merged. It will change once basic logic will be finished.
     public void resolvingCharacterPhase(){
-        ArrayList<Player> playersFromFirstToLastThisPhase = getPlayersInOrderOfCharactersAppearance(players);
+        ArrayList<Player> playersFromFirstToLastThisPhase = getPlayersInOrderOfCharactersAppearance(playerService.getPlayers());
         for(Player player: playersFromFirstToLastThisPhase){
             if (!player.getChoosenCharacter().isKilled()){
                 if(player.getChoosenCharacter() instanceof King && !player.isKing()){
@@ -74,8 +76,8 @@ public class Game {
     }
 
     public void checkWinConditions(){
-        for(int i = 0; i < players.size(); i++){
-            if(players.get(i).getFinishedDistrictsCounter() == 8){
+        for(int i = 0; i < playerService.getPlayers().size(); i++){
+            if(playerService.getPlayers().get(i).getFinishedDistrictsCounter() == 8){
                 countFinalScoreService.countPointsForAllPlayers();
                 setEnded(true);
                 break;

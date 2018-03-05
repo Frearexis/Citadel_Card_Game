@@ -2,27 +2,30 @@ package com.grzechwa.model;
 
 import com.grzechwa.service.DeckService;
 import com.grzechwa.service.KingshipService;
+import com.grzechwa.service.PlayerService;
 
 import java.util.ArrayList;
 
 public class GameInitializer {
-    private Game game;
+    private PlayerService playerService;
     private DeckService deckService;
     private KingshipService kingshipService;
     private ArrayList<Player> players;
+    private Game game;
     private int numberOfAIPlayers;
     private static final int STARTING_GOLD_VALUE = 2;
     private static final int STARTING_DISTRICT_CARDS_VALUE = 4;
 
     public GameInitializer(int numberOfAllPlayers,String... playersNames) {
         players = new ArrayList<>();
+        playerService = new PlayerService(players);
         deckService = new DeckService();
         kingshipService = new KingshipService(players);
         numberOfAIPlayers = numberOfAllPlayers - playersNames.length;
         createHumanPlayers(playersNames);
         createAIPlayers();
         kingshipService.setKingRandomly();
-        game = new Game(this.players);
+        game = new Game(playerService,deckService,kingshipService);
     }
 
     public Game initialize(){
