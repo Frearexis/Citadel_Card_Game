@@ -59,13 +59,28 @@ public class Player {
         finishedDistricts.remove(districtToRemove);
     }
 
+    public void incrementDistrictCounter(){
+        finishedDistrictsCounter++;
+    }
+
+    public void decrementDistrictCounter(){
+        finishedDistrictsCounter--;
+    }
+
     public District getCheapestDistrictInHand(){
         Collections.sort(districtsInHand);
         return  districtsInHand.get(0);
     }
 
-    public District getExpensiveDistrictInHand(){
+    public District getMostExpensiveDistrictPossibleToBuild(){
         Collections.sort(districtsInHand,Collections.reverseOrder());
-        return  districtsInHand.get(0);
+        if(districtsInHand.size() > 0){
+            for(District district : districtsInHand){
+                if(district.getDistrictCost() <= playerGold){
+                    return district;
+                }
+            }
+        }
+        return  null;
     }
 }

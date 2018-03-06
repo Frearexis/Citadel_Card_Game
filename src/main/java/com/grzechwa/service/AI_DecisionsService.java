@@ -9,6 +9,7 @@ public class AI_DecisionsService {
     private DeckService deckService;
     private CharacterService characterService;
     private KillingService killingService;
+    private DistrictDestroyingService districtDestroyingService;
     private PlayerService playerService;
     private Random random;
 
@@ -17,6 +18,7 @@ public class AI_DecisionsService {
         this.characterService = characterService;
         this.playerService = playerService;
         this.killingService = new KillingService(characterService);
+        this.districtDestroyingService = new DistrictDestroyingService(playerService);
         this.random = new Random();
     }
 
@@ -52,11 +54,11 @@ public class AI_DecisionsService {
     }
 
     private void buildChoosenDistrict(Player player, District district){
-        if(district.getDistrictCost() <= player.getPlayerGold()){
+        if(district.getDistrictCost() <= player.getPlayerGold() && district != null){
             player.removeGold(district.getDistrictCost());
             player.removeDistrictFromHand(district);
             player.addDistrictToFinished(district);
-            player.setFinishedDistrictsCounter(player.getFinishedDistrictsCounter()+1);
+            player.incrementDistrictCounter();
         }
     }
 
@@ -76,21 +78,31 @@ public class AI_DecisionsService {
 
     private void playAsAssassin(Player player) {
         killingService.killRandomCharacter();
-        buildChoosenDistrict(player,player.getExpensiveDistrictInHand());
+        buildChoosenDistrict(player,player.getMostExpensiveDistrictPossibleToBuild());
     }
     private void playAsBishop(Player player) {
         player.addGold(countGoldForDistrictsBuilded(player));
         if(playerCanBuild(player)){
-            buildChoosenDistrict(player,player.getExpensiveDistrictInHand());
+            buildChoosenDistrict(player,player.getMostExpensiveDistrictPossibleToBuild());
         }
     }
     private void playAsGeneral(Player player) {
+        player.addGold(countGoldForDistrictsBuilded(player));
+        districtDestroyingService.basicDestroying(player);
+        if(playerCanBuild(player)){
+            buildChoosenDistrict(player,player.getMostExpensiveDistrictPossibleToBuild());
+        }
     }
     private void playAsKing(Player player) {
+        player.addGold(countGoldForDistrictsBuilded(player));
+        if(playerCanBuild(player)){
+            buildChoosenDistrict(player,player.getMostExpensiveDistrictPossibleToBuild());
+        }
     }
     private void playAsMagician(Player player) {
     }
     private void playAsMerchant(Player player) {
+        player.addGold(countGoldForDistrictsBuilded(player));
     }
     private void playAsThief(Player player) {
     }

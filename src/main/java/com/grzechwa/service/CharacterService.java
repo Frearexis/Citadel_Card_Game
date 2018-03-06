@@ -40,6 +40,11 @@ public class CharacterService {
         getCharactersPossibleToPick().forEach(s->System.out.println("\t"+s.getCardName()));
     }
 
+    public void resetCharacterList(){
+        characters.clear();
+        generateCharacterList();
+    }
+
     public ArrayList<Character> getVisibleCharacters(){
         ArrayList<Character> charactersVisibleToAll = new ArrayList<>();
         for(Character character : characters){

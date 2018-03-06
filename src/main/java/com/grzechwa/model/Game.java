@@ -70,9 +70,9 @@ public class Game {
                 System.out.println("Player "+ player.getPlayerName() + " is dead, turn moves forward");
             }
         }
-        for(Player player: playersFromFirstToLastThisPhase){
-            player.setChoosenCharacter(null);
-        }
+        checkWinConditions();
+        playerService.resetPlayersChoosenCharacters();
+        characterService.resetCharacterList();
     }
 
     public void checkWinConditions(){
