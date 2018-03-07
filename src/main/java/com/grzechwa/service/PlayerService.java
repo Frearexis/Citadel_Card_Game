@@ -56,6 +56,19 @@ public class PlayerService {
         return playersWithCheapestDistricts;
     }
 
+    public Player getRandomPlayerPossibleToDestroy(ArrayList<Player> players){
+        ArrayList<Player> playersWithLessThen8Districts = new ArrayList<>();
+        for(Player player : players){
+            if(player.getFinishedDistrictsCounter() < 8){
+                playersWithLessThen8Districts.add(player);
+            }
+        }
+        if(playersWithLessThen8Districts.size() > 0){
+            return getRandomPlayer(playersWithLessThen8Districts);
+        }
+        return null;
+    }
+
     private Player getPlayerOtherThenAskingOne(Player askingPlayer){
         return players.get(0).equals(askingPlayer) ? players.get(1):players.get(0);
     }

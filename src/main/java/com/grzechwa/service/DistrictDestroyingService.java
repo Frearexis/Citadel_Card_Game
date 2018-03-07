@@ -1,5 +1,6 @@
 package com.grzechwa.service;
 
+import com.grzechwa.model.District;
 import com.grzechwa.model.Player;
 
 import java.util.ArrayList;
@@ -15,10 +16,12 @@ public class DistrictDestroyingService {
     public void basicDestroying(Player warlordPlayer){
         ArrayList<Player> ownersOfLowCostDistricts = playerService.getPlayersWithOneCostDistrictBuilded(warlordPlayer);
         if(ownersOfLowCostDistricts.size() > 0){
-            Player playerWithDistrictToDestroy = playerService.getRandomPlayer(ownersOfLowCostDistricts);
-            Collections.sort(playerWithDistrictToDestroy.getFinishedDistricts());
-            playerWithDistrictToDestroy.getFinishedDistricts().remove(0); //removeFromFinished
-            playerWithDistrictToDestroy.decrementDistrictCounter();
+            Player playerWithDistrictToDestroy = playerService.getRandomPlayerPossibleToDestroy(ownersOfLowCostDistricts);
+            if(playerWithDistrictToDestroy != null){
+                Collections.sort(playerWithDistrictToDestroy.getFinishedDistricts());
+                playerWithDistrictToDestroy.getFinishedDistricts().remove(0); //removeFromFinished
+                playerWithDistrictToDestroy.decrementDistrictCounter();
+            }
         }
     }
 }
