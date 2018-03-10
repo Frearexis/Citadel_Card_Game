@@ -15,6 +15,7 @@ public final class Thief extends Character {
                 2,
                 false,
                 false,
+                false,
                 false);
     }
     public boolean equals(Object o) {

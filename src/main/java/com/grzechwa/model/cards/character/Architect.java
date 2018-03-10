@@ -15,6 +15,7 @@ public final class Architect extends Character {
                 7,
                 false,
                 false,
+                false,
                 false);
     }
     public boolean equals(Object o) {

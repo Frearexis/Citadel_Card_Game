@@ -15,6 +15,7 @@ public final class Assassin extends Character {
                 1,
                 false,
                 false,
+                false,
                 false);
     }
     public boolean equals(Object o) {

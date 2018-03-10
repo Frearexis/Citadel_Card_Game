@@ -15,6 +15,7 @@ public final class Merchant extends Character {
                 6,
                 false,
                 false,
+                false,
                 false);
     }
     public boolean equals(Object o) {

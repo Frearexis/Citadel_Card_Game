@@ -27,9 +27,7 @@ public class Main extends Application {
 
         while(!game.hasEnded()){
             game.choosingCharacterPhase();
-            //game.resolvingCharacterPhase();
-            //game.checkWinConditions();
-            game.setEnded(true);
+            game.resolvingCharacterPhase();
         }
 
     }

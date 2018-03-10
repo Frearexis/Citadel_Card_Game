@@ -31,6 +31,15 @@ public class CharacterService {
                 new Thief()));
     }
 
+    public void resetCharacterList(){
+        characters.clear();
+        generateCharacterList();
+    }
+
+    public ArrayList<Character> getAllCharacters(){
+        return characters;
+    }
+
     public void generateCharactersToChooseFrom(){
         discardRandomCharacterFromCharacters();
         setRandomCharactersAsVisibleToAll(2);
@@ -38,11 +47,6 @@ public class CharacterService {
             getVisibleCharacters().forEach(s->System.out.println("\t"+s.getCardName()));
         System.out.println("Characters possible to pick ");
         getCharactersPossibleToPick().forEach(s->System.out.println("\t"+s.getCardName()));
-    }
-
-    public void resetCharacterList(){
-        characters.clear();
-        generateCharacterList();
     }
 
     public ArrayList<Character> getVisibleCharacters(){
@@ -55,6 +59,15 @@ public class CharacterService {
         return charactersVisibleToAll;
     }
 
+    public boolean isCharacterOnVisiblePile(Character characterToCheck){
+        for(Character character : getVisibleCharacters()){
+            if(character.equals(characterToCheck)){
+                return true;
+            }
+        }
+        return false;
+    }
+
     public ArrayList<Character> getCharactersPossibleToPick(){
         ArrayList<Character> charactersPossibleToPick = new ArrayList<>();
         for(Character character : characters){
@@ -63,10 +76,6 @@ public class CharacterService {
             }
         }
         return charactersPossibleToPick;
-    }
-
-    public ArrayList<Character> getAllCharacters(){
-        return characters;
     }
 
     public Character getRandomCharacterFromPossibleToPick(){
@@ -80,7 +89,7 @@ public class CharacterService {
     //This is required because of starting rules. King cannot be shown to Players.
     private Character getNotAKingCharacterFromList() {
         Character character = getRandomCharacter(characters);
-        if (!(character instanceof King) && !(character.isDiscarded())) {
+        if (!(character.equals(new King())) && !(character.isDiscarded())) {
             return character;
         }
         return getNotAKingCharacterFromList();

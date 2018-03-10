@@ -15,6 +15,7 @@ public final class Bishop extends Character {
                 5,
                 false,
                 false,
+                false,
                 false);
     }
     public boolean equals(Object o) {

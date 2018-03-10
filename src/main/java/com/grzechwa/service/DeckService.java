@@ -3,11 +3,13 @@ package com.grzechwa.service;
 import com.grzechwa.model.Deck;
 import com.grzechwa.model.District;
 import com.grzechwa.model.Player;
+import lombok.Getter;
 
 import java.util.ArrayList;
 
 public class DeckService {
     private DeckCreator deckCreator;
+    @Getter
     private Deck deck;
 
     public DeckService(){

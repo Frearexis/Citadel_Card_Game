@@ -1,8 +1,11 @@
 package com.grzechwa.service;
 
-import com.grzechwa.model.Card;
 import com.grzechwa.model.District;
 import com.grzechwa.model.Player;
+import com.grzechwa.model.cards.character.Bishop;
+import com.grzechwa.model.cards.character.Thief;
+import com.grzechwa.model.comparators.DistrictsInHandComparator;
+import com.grzechwa.model.comparators.PlayersGoldComparator;
 import lombok.Getter;
 
 import java.util.ArrayList;
@@ -28,6 +31,39 @@ public class PlayerService {
 
     public Player getRandomPlayer(ArrayList<Player> customPlayerList){
         return customPlayerList.get(random.nextInt(customPlayerList.size()));
+    }
+
+    public Player getThiefPlayer(ArrayList<Player> players){
+        for(Player player : players){
+            if(player.getChoosenCharacter().equals(new Thief())){
+                return player;
+            }
+        }
+        return null;
+    }
+
+    public ArrayList<District> getDistrictsPossibleToBuildWithExtraGold(Player player, int amount){
+        ArrayList<District> districtsPossibleToBuild = new ArrayList<>();
+        for(District districtInHand : player.getDistrictsInHand()){
+            for(District districtBuilded : player.getFinishedDistricts()){
+                if(player.getPlayerGold()+amount >= districtInHand.getDistrictCost() && !(districtInHand.equals(districtBuilded))){
+                    districtsPossibleToBuild.add(districtInHand);
+                }
+            }
+        }
+        return districtsPossibleToBuild;
+    }
+
+    public ArrayList<District> getDistrictsPossibleToBuild(Player player){
+        ArrayList<District> districtsPossibleToBuild = new ArrayList<>();
+        for(District districtInHand : player.getDistrictsInHand()){
+            for(District districtBuilded : player.getFinishedDistricts()){
+                if(player.getPlayerGold() >= districtInHand.getDistrictCost() && !(districtInHand.equals(districtBuilded))){
+                    districtsPossibleToBuild.add(districtInHand);
+                }
+            }
+        }
+        return districtsPossibleToBuild;
     }
 
     //It's not perfect yet as this method will always return the last player when it comes to tie.
@@ -59,7 +95,7 @@ public class PlayerService {
     public Player getRandomPlayerPossibleToDestroy(ArrayList<Player> players){
         ArrayList<Player> playersWithLessThen8Districts = new ArrayList<>();
         for(Player player : players){
-            if(player.getFinishedDistrictsCounter() < 8){
+            if(player.getFinishedDistrictsCounter() < 8 && !(player.getChoosenCharacter() instanceof Bishop)){
                 playersWithLessThen8Districts.add(player);
             }
         }
@@ -73,9 +109,16 @@ public class PlayerService {
         return players.get(0).equals(askingPlayer) ? players.get(1):players.get(0);
     }
 
-    /*
-    public Player getPlayerWithHighestAmountOfGold(){}
-    public Player getPlayerWithHighestAmountOfDistrictsFinished(){}
-    public Player getPlayerWithHighestAmountOfDistrictsInHand(){}
-    */
+    public Player getPlayerWithHighestAmountOfGold(Player askingPlayer){
+        Collections.sort(players, new PlayersGoldComparator());
+        return getPlayerOtherThenAskingOne(askingPlayer);
+    }
+
+    public Player getPlayerWithHighestAmountOfDistrictsInHand(Player askingPlayer){
+        Collections.sort(players,new DistrictsInHandComparator());
+        if(players.get(0).equals(askingPlayer) && players.get(0).getDistrictsInHand().size() > players.get(1).getDistrictsInHand().size()){
+            return askingPlayer;
+        }
+        return players.get(0);
+    }
 }

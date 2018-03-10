@@ -63,24 +63,7 @@ public class Player {
         finishedDistrictsCounter++;
     }
 
-    public void decrementDistrictCounter(){
+    public void decrementFinishedDistrictsCounter(){
         finishedDistrictsCounter--;
-    }
-
-    public District getCheapestDistrictInHand(){
-        Collections.sort(districtsInHand);
-        return  districtsInHand.get(0);
-    }
-
-    public District getMostExpensiveDistrictPossibleToBuild(){
-        Collections.sort(districtsInHand,Collections.reverseOrder());
-        if(districtsInHand.size() > 0){
-            for(District district : districtsInHand){
-                if(district.getDistrictCost() <= playerGold){
-                    return district;
-                }
-            }
-        }
-        return  null;
     }
 }

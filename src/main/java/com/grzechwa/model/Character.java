@@ -11,6 +11,7 @@ public abstract class Character extends Card {
     private Player currentOwner;
     private int turnOfAppearance;
     private boolean isKilled;
+    private boolean isRobbed;
     private boolean isDiscarded;
     private boolean isOnVisibleCharactersPile;
 
@@ -19,11 +20,13 @@ public abstract class Character extends Card {
                      boolean isVisible,
                      int turnOfAppearance,
                      boolean isKilled,
+                     boolean isRobbed,
                      boolean isDiscarded,
                      boolean isOnVisibleCharactersPile) {
                     super(cardName,cardColor,isVisible);
                     this.turnOfAppearance = turnOfAppearance;
                     this.isKilled = isKilled;
+                    this.isRobbed = isRobbed;
                     this.isDiscarded = isDiscarded;
                     this.isOnVisibleCharactersPile = isOnVisibleCharactersPile;
     }

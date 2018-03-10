@@ -15,6 +15,7 @@ public final class General extends Character {
                 8,
                 false,
                 false,
+                false,
                 false);
     }
     public boolean equals(Object o) {

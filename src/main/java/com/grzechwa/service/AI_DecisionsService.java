@@ -3,23 +3,27 @@ package com.grzechwa.service;
 import com.grzechwa.model.District;
 import com.grzechwa.model.Player;
 
-import java.util.Random;
+import java.util.ArrayList;
 
 public class AI_DecisionsService {
     private DeckService deckService;
-    private CharacterService characterService;
-    private KillingService killingService;
-    private DistrictDestroyingService districtDestroyingService;
     private PlayerService playerService;
-    private Random random;
+    private DistrictService districtService;
+    private BuildingService buildingService;
+    private KillingService killingService;
+    private TheftService theftService;
+    private DistrictDestroyingService districtDestroyingService;
+    private DistrictSwappingService districtSwappingService;
 
     public AI_DecisionsService(DeckService deckService, CharacterService characterService, PlayerService playerService){
         this.deckService = deckService;
-        this.characterService = characterService;
         this.playerService = playerService;
+        this.districtService = new DistrictService();
+        this.buildingService = new BuildingService(playerService,districtService,this);
         this.killingService = new KillingService(characterService);
+        this.theftService = new TheftService(playerService,characterService);
         this.districtDestroyingService = new DistrictDestroyingService(playerService);
-        this.random = new Random();
+        this.districtSwappingService = new DistrictSwappingService(playerService,deckService);
     }
 
     public void play(Player player){
@@ -43,67 +47,100 @@ public class AI_DecisionsService {
         }
     }
 
-    private int countGoldForDistrictsBuilded(Player player){
-        int colorMatchCounter = 0;
-        for(District district : player.getFinishedDistricts()){
-            if(player.getChoosenCharacter().getCardColor().equals(district.getCardColor())){
-                colorMatchCounter++;
-            }
-        }
-        return colorMatchCounter;
-    }
-
-    private void buildChoosenDistrict(Player player, District district){
-        if(district.getDistrictCost() <= player.getPlayerGold() && district != null){
-            player.removeGold(district.getDistrictCost());
-            player.removeDistrictFromHand(district);
-            player.addDistrictToFinished(district);
-            player.incrementDistrictCounter();
+    private void decideGoldOrDistrict(Player player){
+        if(shouldTakeDistrict(player)){
+            player.addDistrictsToHand(deckService.drawDistricts(1));
+        }else{
+            player.addGold(2);
         }
     }
 
-    private boolean playerCanBuild(Player player){
-        return player.getDistrictsInHand().size() > 0 && player.getPlayerGold() > 0 && player.getFinishedDistrictsCounter() <8;
+    private boolean shouldTakeDistrict(Player player){
+        ArrayList<District> districts = playerService.getDistrictsPossibleToBuildWithExtraGold(player, 2);
+        if(player.getDistrictsInHand().isEmpty() || districts.isEmpty()){
+            return true;
+        }
+        return false;
+    }
+
+    private boolean shouldTakeGoldForDistrictsBeforeBuild(Player player){
+        ArrayList<District> districtsPTB = playerService.getDistrictsPossibleToBuild(player);
+        ArrayList<District> districtsColored = districtService.getPlayerColorDistricts(player,districtsPTB);
+        return !districtsColored.isEmpty();
+    }
+
+    //Magician specific method
+    public void takeDistrictsFromPlayerOrDeck(Player player){
+        Player playerWithHighestAmountOfDistrictsInHand = playerService.getPlayerWithHighestAmountOfDistrictsInHand(player);
+        if(playerWithHighestAmountOfDistrictsInHand.equals(player)){
+            districtSwappingService.swapDistrictsWithDeck(player);
+        }else{
+            districtSwappingService.swapDistrictsBetweenPlayers(player,playerWithHighestAmountOfDistrictsInHand);
+        }
     }
 
     private void playAsArchitect(Player player) {
-        for(int i = 0; i < 3; i++){
-            if(playerCanBuild(player)){
-                buildChoosenDistrict(player,player.getCheapestDistrictInHand());
-            }
-            break;
-        }
+        player.addGold(2);
+        buildingService.buildAsArchitect(player);
         player.addDistrictsToHand(deckService.drawDistricts(2));
     }
 
     private void playAsAssassin(Player player) {
         killingService.killRandomCharacter();
-        buildChoosenDistrict(player,player.getMostExpensiveDistrictPossibleToBuild());
+        decideGoldOrDistrict(player);
+        buildingService.buildAsAssassin(player);
     }
+
     private void playAsBishop(Player player) {
-        player.addGold(countGoldForDistrictsBuilded(player));
-        if(playerCanBuild(player)){
-            buildChoosenDistrict(player,player.getMostExpensiveDistrictPossibleToBuild());
+        decideGoldOrDistrict(player);
+        if(shouldTakeGoldForDistrictsBeforeBuild(player)){
+            buildingService.buildAfterGoldTaken(player);
+        }else{
+            buildingService.buildBeforeGoldTaken(player);
         }
     }
+
     private void playAsGeneral(Player player) {
-        player.addGold(countGoldForDistrictsBuilded(player));
+        decideGoldOrDistrict(player);
+        if(shouldTakeGoldForDistrictsBeforeBuild(player)){
+            buildingService.buildAfterGoldTaken(player);
+        }else{
+            buildingService.buildBeforeGoldTaken(player);
+        }
         districtDestroyingService.basicDestroying(player);
-        if(playerCanBuild(player)){
-            buildChoosenDistrict(player,player.getMostExpensiveDistrictPossibleToBuild());
-        }
     }
+
     private void playAsKing(Player player) {
-        player.addGold(countGoldForDistrictsBuilded(player));
-        if(playerCanBuild(player)){
-            buildChoosenDistrict(player,player.getMostExpensiveDistrictPossibleToBuild());
+        decideGoldOrDistrict(player);
+        if(shouldTakeGoldForDistrictsBeforeBuild(player)){
+            buildingService.buildAfterGoldTaken(player);
+        }else{
+            buildingService.buildBeforeGoldTaken(player);
         }
     }
+    //
     private void playAsMagician(Player player) {
+        player.addGold(2);
+        buildingService.buildAndSwapAsMagician(player);
     }
+
     private void playAsMerchant(Player player) {
-        player.addGold(countGoldForDistrictsBuilded(player));
+        decideGoldOrDistrict(player);
+        player.addGold(1);
+        if(shouldTakeGoldForDistrictsBeforeBuild(player)){
+            buildingService.buildAfterGoldTaken(player);
+        }else{
+            buildingService.buildBeforeGoldTaken(player);
+        }
     }
+
     private void playAsThief(Player player) {
+        theftService.robRandomCharacter();
+        decideGoldOrDistrict(player);
+        if(shouldTakeGoldForDistrictsBeforeBuild(player)){
+            buildingService.buildAfterGoldTaken(player);
+        }else{
+            buildingService.buildBeforeGoldTaken(player);
+        }
     }
 }

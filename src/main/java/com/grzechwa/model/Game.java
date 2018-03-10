@@ -1,6 +1,7 @@
 package com.grzechwa.model;
 
 import com.grzechwa.model.cards.character.King;
+import com.grzechwa.model.cards.character.Thief;
 import com.grzechwa.service.*;
 import lombok.Setter;
 
@@ -10,22 +11,18 @@ import java.util.Random;
 
 public class Game {
     private PlayerService playerService;
-    private DeckService deckService;
     private KingshipService kingshipService;
     private CharacterService characterService;
     private AI_DecisionsService ai_decisionsService;
     private CountFinalScoreService countFinalScoreService;
-    private Random random;
     @Setter private boolean Ended = false;
 
     public Game(PlayerService playerService, DeckService deckService, KingshipService kingshipService){
         this.playerService = playerService;
-        this.deckService = deckService;
         this.kingshipService = kingshipService;
         characterService = new CharacterService();
         ai_decisionsService = new AI_DecisionsService(deckService,characterService,playerService);
         countFinalScoreService = new CountFinalScoreService(playerService.getPlayers());
-        random = new Random();
     }
 
     public boolean hasEnded(){
@@ -57,14 +54,24 @@ public class Game {
         ArrayList<Player> playersFromFirstToLastThisPhase = getPlayersInOrderOfCharactersAppearance(playerService.getPlayers());
         for(Player player: playersFromFirstToLastThisPhase){
             if (!player.getChoosenCharacter().isKilled()){
-                if(player.getChoosenCharacter() instanceof King && !player.isKing()){
-                    kingshipService.removeKing();
-                    kingshipService.setKing(player);
-                    setGoldOrDistrictRandomly(player);
-                    ai_decisionsService.play(player);
+                if(!player.getChoosenCharacter().isRobbed()) {
+                    if (player.getChoosenCharacter().equals(new King()) && !player.isKing()) {
+                        kingshipService.removeKing();
+                        kingshipService.setKing(player);
+                        ai_decisionsService.play(player);
+                    } else {
+                        ai_decisionsService.play(player);
+                    }
                 }else{
-                    setGoldOrDistrictRandomly(player);
-                    ai_decisionsService.play(player);
+                    playerService.getThiefPlayer(playersFromFirstToLastThisPhase).addGold(player.getPlayerGold());
+                    player.removeGold(player.getPlayerGold());
+                    if (player.getChoosenCharacter() instanceof King && !player.isKing()) {
+                        kingshipService.removeKing();
+                        kingshipService.setKing(player);
+                        ai_decisionsService.play(player);
+                    } else {
+                        ai_decisionsService.play(player);
+                    }
                 }
             }else{
                 System.out.println("Player "+ player.getPlayerName() + " is dead, turn moves forward");
@@ -82,14 +89,6 @@ public class Game {
                 setEnded(true);
                 break;
             }
-        }
-    }
-
-    private void setGoldOrDistrictRandomly(Player player){
-        if(random.nextInt(2) == 0){
-            player.addGold(2);
-        }else{
-            player.addDistrictsToHand(deckService.drawDistricts(1));
         }
     }
 

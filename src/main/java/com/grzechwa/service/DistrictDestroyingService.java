@@ -1,6 +1,5 @@
 package com.grzechwa.service;
 
-import com.grzechwa.model.District;
 import com.grzechwa.model.Player;
 
 import java.util.ArrayList;
@@ -20,7 +19,7 @@ public class DistrictDestroyingService {
             if(playerWithDistrictToDestroy != null){
                 Collections.sort(playerWithDistrictToDestroy.getFinishedDistricts());
                 playerWithDistrictToDestroy.getFinishedDistricts().remove(0); //removeFromFinished
-                playerWithDistrictToDestroy.decrementDistrictCounter();
+                playerWithDistrictToDestroy.decrementFinishedDistrictsCounter();
             }
         }
     }

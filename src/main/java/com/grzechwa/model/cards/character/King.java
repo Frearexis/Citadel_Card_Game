@@ -15,6 +15,7 @@ public final class King extends Character {
                 4,
                 false,
                 false,
+                false,
                 false);
     }
     public boolean equals(Object o) {

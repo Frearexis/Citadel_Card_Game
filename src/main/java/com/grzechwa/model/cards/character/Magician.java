@@ -15,6 +15,7 @@ public final class Magician extends Character {
                 3,
                 false,
                 false,
+                false,
                 false);
     }
     public boolean equals(Object o) {

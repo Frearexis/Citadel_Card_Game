@@ -11,7 +11,7 @@ public class KillingService {
     }
 
     public void killRandomCharacter(){
-        Character character = characterService.getRandomCharacter(characterService.getAllCharacters());
+        Character character = characterService.getRandomCharacter(characterService.getAllCharacters() );
         if(character.isOnVisibleCharactersPile() || character instanceof Assassin){
             killRandomCharacter();
             }else{
