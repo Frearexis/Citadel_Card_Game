@@ -23,7 +23,7 @@ public class AI_DecisionsService {
         this.killingService = new KillingService(characterService);
         this.theftService = new TheftService(playerService,characterService);
         this.districtDestroyingService = new DistrictDestroyingService(playerService);
-        this.districtSwappingService = new DistrictSwappingService(playerService,deckService);
+        this.districtSwappingService = new DistrictSwappingService(deckService);
     }
 
     public void play(Player player){
@@ -79,28 +79,50 @@ public class AI_DecisionsService {
         }
     }
 
+    public void printPlayerRoundSummary(Player player){
+        System.out.println(player.getPlayerName()+
+                " gold "+player.getPlayerGold()+
+                " dist in hand "+player.getDistrictsInHand().size()+
+                " finished dis count "+player.getFinishedDistrictsCounter()+
+                " finished dis size "+player.getFinishedDistricts().size());
+    }
+
     private void playAsArchitect(Player player) {
+        System.out.println("Player Turn Start Statistics");
+        printPlayerRoundSummary(player);
         player.addGold(2);
         buildingService.buildAsArchitect(player);
         player.addDistrictsToHand(deckService.drawDistricts(2));
+        System.out.println("End Turn");
+        printPlayerRoundSummary(player);
     }
 
     private void playAsAssassin(Player player) {
+        System.out.println("Player Turn Start Statistics");
+        printPlayerRoundSummary(player);
         killingService.killRandomCharacter();
         decideGoldOrDistrict(player);
         buildingService.buildAsAssassin(player);
+        System.out.println("End Turn");
+        printPlayerRoundSummary(player);
     }
 
     private void playAsBishop(Player player) {
+        System.out.println("Player Turn Start Statistics");
+        printPlayerRoundSummary(player);
         decideGoldOrDistrict(player);
         if(shouldTakeGoldForDistrictsBeforeBuild(player)){
             buildingService.buildAfterGoldTaken(player);
         }else{
             buildingService.buildBeforeGoldTaken(player);
         }
+        System.out.println("End Turn");
+        printPlayerRoundSummary(player);
     }
 
     private void playAsGeneral(Player player) {
+        System.out.println("Player Turn Start Statistics");
+        printPlayerRoundSummary(player);
         decideGoldOrDistrict(player);
         if(shouldTakeGoldForDistrictsBeforeBuild(player)){
             buildingService.buildAfterGoldTaken(player);
@@ -108,23 +130,35 @@ public class AI_DecisionsService {
             buildingService.buildBeforeGoldTaken(player);
         }
         districtDestroyingService.basicDestroying(player);
+        System.out.println("End Turn");
+        printPlayerRoundSummary(player);
     }
 
     private void playAsKing(Player player) {
+        System.out.println("Player Turn Start Statistics");
+        printPlayerRoundSummary(player);
         decideGoldOrDistrict(player);
         if(shouldTakeGoldForDistrictsBeforeBuild(player)){
             buildingService.buildAfterGoldTaken(player);
         }else{
             buildingService.buildBeforeGoldTaken(player);
         }
+        System.out.println("End Turn");
+        printPlayerRoundSummary(player);
     }
-    //
+
     private void playAsMagician(Player player) {
+        System.out.println("Player Turn Start Statistics");
+        printPlayerRoundSummary(player);
         player.addGold(2);
         buildingService.buildAndSwapAsMagician(player);
+        System.out.println("End Turn");
+        printPlayerRoundSummary(player);
     }
 
     private void playAsMerchant(Player player) {
+        System.out.println("Player Turn Start Statistics");
+        printPlayerRoundSummary(player);
         decideGoldOrDistrict(player);
         player.addGold(1);
         if(shouldTakeGoldForDistrictsBeforeBuild(player)){
@@ -132,9 +166,13 @@ public class AI_DecisionsService {
         }else{
             buildingService.buildBeforeGoldTaken(player);
         }
+        System.out.println("End Turn");
+        printPlayerRoundSummary(player);
     }
 
     private void playAsThief(Player player) {
+        System.out.println("Player Turn Start Statistics");
+        printPlayerRoundSummary(player);
         theftService.robRandomCharacter();
         decideGoldOrDistrict(player);
         if(shouldTakeGoldForDistrictsBeforeBuild(player)){
@@ -142,5 +180,7 @@ public class AI_DecisionsService {
         }else{
             buildingService.buildBeforeGoldTaken(player);
         }
+        System.out.println("End Turn");
+        printPlayerRoundSummary(player);
     }
 }

@@ -15,13 +15,7 @@ public class DistrictService {
 
     public District getMostExpensiveDistrict(ArrayList<District> districts){
         Collections.sort(districts,Collections.reverseOrder());
-        return districts.get(0);
-    }
-
-    public ArrayList<District> getMostExpensiveDistricts(ArrayList<District> districts){
-        Collections.sort(districts,Collections.reverseOrder());
-        ArrayList<District> expensiveDistricts = new ArrayList<>();
-        return  expensiveDistricts;
+        return districts.isEmpty() ? null : districts.get(0);
     }
 
     public ArrayList<District> getPlayerColorDistricts(Player player, ArrayList<District> districts){

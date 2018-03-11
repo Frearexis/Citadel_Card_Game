@@ -14,4 +14,16 @@ public final class Dragon_Gate extends District {
                 true,
                 8);
     }
+
+    public boolean equals(Object o) {
+        if (!(o instanceof Dragon_Gate)) {
+            return false;
+        }
+        Dragon_Gate other = (Dragon_Gate) o;
+        return cardName.equals(other.cardName) && cardColor.equals(other.cardColor) && districtCost == other.districtCost;
+    }
+
+    public int hashCode() {
+        return cardName.hashCode();
+    }
 }

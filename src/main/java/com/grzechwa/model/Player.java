@@ -55,10 +55,6 @@ public class Player {
         finishedDistricts.add(districtToAdd);
     }
 
-    public void removeDistrictFromFinished(District districtToRemove){
-        finishedDistricts.remove(districtToRemove);
-    }
-
     public void incrementDistrictCounter(){
         finishedDistrictsCounter++;
     }

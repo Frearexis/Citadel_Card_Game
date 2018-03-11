@@ -14,4 +14,16 @@ public final class Castle extends District {
                 true,
                 4);
     }
+
+    public boolean equals(Object o) {
+        if (!(o instanceof Castle)) {
+            return false;
+        }
+        Castle other = (Castle) o;
+        return cardName.equals(other.cardName) && cardColor.equals(other.cardColor) && districtCost == other.districtCost;
+    }
+
+    public int hashCode() {
+        return cardName.hashCode();
+    }
 }

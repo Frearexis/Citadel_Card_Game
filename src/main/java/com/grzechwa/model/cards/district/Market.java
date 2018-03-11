@@ -14,4 +14,16 @@ public final class Market extends District {
                 true,
                 2);
     }
+
+    public boolean equals(Object o) {
+        if (!(o instanceof Market)) {
+            return false;
+        }
+        Market other = (Market) o;
+        return cardName.equals(other.cardName) && cardColor.equals(other.cardColor) && districtCost == other.districtCost;
+    }
+
+    public int hashCode() {
+        return cardName.hashCode();
+    }
 }

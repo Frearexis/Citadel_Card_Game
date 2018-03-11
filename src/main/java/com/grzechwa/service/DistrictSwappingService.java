@@ -6,11 +6,9 @@ import com.grzechwa.model.Player;
 import java.util.ArrayList;
 
 public class DistrictSwappingService {
-    private PlayerService playerService;
     private DeckService deckService;
 
-    public DistrictSwappingService(PlayerService playerService, DeckService deckService){
-        this.playerService = playerService;
+    public DistrictSwappingService(DeckService deckService){
         this.deckService = deckService;
     }
 
@@ -20,8 +18,11 @@ public class DistrictSwappingService {
         targetPlayer.setDistrictsInHand(helperList);
     }
 
-    public ArrayList<District> swapDistrictsWithDeck(Player askingPlayer){
-        return new ArrayList<>();
+    //For now it removes swapped districts from game later on they will be moved on bottom of deck
+    public void swapDistrictsWithDeck(Player askingPlayer){
+        int amountToSwap = askingPlayer.getDistrictsInHand().size();
+        askingPlayer.setDistrictsInHand(new ArrayList<>());
+        deckService.drawDistricts(amountToSwap);
     }
 
 }

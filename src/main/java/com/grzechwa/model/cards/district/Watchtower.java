@@ -14,4 +14,16 @@ public final class Watchtower extends District {
                 true,
                 1);
     }
+
+    public boolean equals(Object o) {
+        if (!(o instanceof Watchtower)) {
+            return false;
+        }
+        Watchtower other = (Watchtower) o;
+        return cardName.equals(other.cardName) && cardColor.equals(other.cardColor) && districtCost == other.districtCost;
+    }
+
+    public int hashCode() {
+        return cardName.hashCode();
+    }
 }

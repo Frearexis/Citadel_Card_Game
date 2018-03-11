@@ -14,4 +14,16 @@ public final class Warehouse extends District {
                 true,
                 2);
     }
+
+    public boolean equals(Object o) {
+        if (!(o instanceof Warehouse)) {
+            return false;
+        }
+        Warehouse other = (Warehouse) o;
+        return cardName.equals(other.cardName) && cardColor.equals(other.cardColor) && districtCost == other.districtCost;
+    }
+
+    public int hashCode() {
+        return cardName.hashCode();
+    }
 }

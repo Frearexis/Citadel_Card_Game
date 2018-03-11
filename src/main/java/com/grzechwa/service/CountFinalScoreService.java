@@ -22,7 +22,19 @@ public class CountFinalScoreService {
                    +countPointsForNextWith8Districts(player)
                    +countPointsForDistrictsBuilded(player)
                    +districtsInAllColorsBonus(player));
+            printPlayerFinalSummary(player);
         }
+    }
+
+    //For debuging in text mode
+    public void printPlayerFinalSummary(Player player){
+        System.out.printf(" \n %s points for first with 8 %d \n points for next w8 %d \n points for districts %d \n all colors %d \n",
+                player.getPlayerName(),
+                countPointsForNextWith8Districts(player),
+                countPointsForNextWith8Districts(player),
+                countPointsForDistrictsBuilded(player),
+                districtsInAllColorsBonus(player));
+        player.getFinishedDistricts().forEach(s-> System.out.println(s.getCardName()+" "+s.getCardColor()+" "+s.getDistrictCost()));
     }
 
     private int countPointsForFirstWith8Districts(Player player){
@@ -30,7 +42,7 @@ public class CountFinalScoreService {
     }
 
     private int countPointsForNextWith8Districts(Player player){
-        return (player.isFirstWith8Districts() == false && player.getFinishedDistrictsCounter() == 8) ? NEXT_WITH_8_DISTRICT_POINTS : 0;
+        return (!player.isFirstWith8Districts() && player.getFinishedDistrictsCounter() == 8) ? NEXT_WITH_8_DISTRICT_POINTS : 0;
     }
 
     private int countPointsForDistrictsBuilded(Player player){

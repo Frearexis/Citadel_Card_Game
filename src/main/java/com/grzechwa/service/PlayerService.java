@@ -25,7 +25,7 @@ public class PlayerService {
 
     public void resetPlayersChoosenCharacters(){
         for(Player player : players){
-            player.getChoosenCharacter().setCurrentOwner(null);
+            player.setChoosenCharacter(null);
         }
     }
 
@@ -57,13 +57,20 @@ public class PlayerService {
     public ArrayList<District> getDistrictsPossibleToBuild(Player player){
         ArrayList<District> districtsPossibleToBuild = new ArrayList<>();
         for(District districtInHand : player.getDistrictsInHand()){
-            for(District districtBuilded : player.getFinishedDistricts()){
-                if(player.getPlayerGold() >= districtInHand.getDistrictCost() && !(districtInHand.equals(districtBuilded))){
+            if(player.getPlayerGold() >= districtInHand.getDistrictCost() && !(playerAlreadyFinishedDistrict(player,districtInHand))){
                     districtsPossibleToBuild.add(districtInHand);
                 }
-            }
         }
         return districtsPossibleToBuild;
+    }
+
+    public boolean playerAlreadyFinishedDistrict(Player player, District district){
+        for(District dist : player.getFinishedDistricts()){
+            if(dist.equals(district)){
+                return true;
+            }
+        }
+        return false;
     }
 
     //It's not perfect yet as this method will always return the last player when it comes to tie.
@@ -95,7 +102,7 @@ public class PlayerService {
     public Player getRandomPlayerPossibleToDestroy(ArrayList<Player> players){
         ArrayList<Player> playersWithLessThen8Districts = new ArrayList<>();
         for(Player player : players){
-            if(player.getFinishedDistrictsCounter() < 8 && !(player.getChoosenCharacter() instanceof Bishop)){
+            if(player.getFinishedDistrictsCounter() < 8 && !(player.getChoosenCharacter().equals(new Bishop()))){
                 playersWithLessThen8Districts.add(player);
             }
         }

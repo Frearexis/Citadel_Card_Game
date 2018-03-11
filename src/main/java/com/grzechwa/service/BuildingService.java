@@ -29,6 +29,7 @@ public class BuildingService {
         player.removeDistrictFromHand(district);
         player.addDistrictToFinished(district);
         player.incrementDistrictCounter();
+        System.out.println("\t"+player.getPlayerName()+" build "+ district.getCardName()+ " "+ district.getDistrictCost());
     }
 
     public int countGoldForDistrictsBuilded(Player player){
@@ -38,6 +39,7 @@ public class BuildingService {
                 colorMatchCounter++;
             }
         }
+        System.out.println(player.getPlayerName()+ "Gold for districts builded");
         return colorMatchCounter;
     }
 

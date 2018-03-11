@@ -14,4 +14,16 @@ public final class Cathedral extends District {
                 true,
                 5);
     }
+
+    public boolean equals(Object o) {
+        if (!(o instanceof Cathedral)) {
+            return false;
+        }
+        Cathedral other = (Cathedral) o;
+        return cardName.equals(other.cardName) && cardColor.equals(other.cardColor) && districtCost == other.districtCost;
+    }
+
+    public int hashCode() {
+        return cardName.hashCode();
+    }
 }

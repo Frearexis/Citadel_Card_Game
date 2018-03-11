@@ -6,7 +6,7 @@ import lombok.ToString;
 @Data
 @ToString(callSuper=true)
 public abstract class District extends Card implements Comparable<District> {
-    private int districtCost;
+    protected int districtCost;
 
     public District(String cardName,
                     String cardColor,

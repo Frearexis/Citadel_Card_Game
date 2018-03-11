@@ -14,4 +14,16 @@ public final class Church extends District {
                 true,
                 2);
     }
+
+    public boolean equals(Object o) {
+        if (!(o instanceof Church)) {
+            return false;
+        }
+        Church other = (Church) o;
+        return cardName.equals(other.cardName) && cardColor.equals(other.cardColor ) && districtCost == other.districtCost;
+    }
+
+    public int hashCode() {
+        return cardName.hashCode();
+    }
 }

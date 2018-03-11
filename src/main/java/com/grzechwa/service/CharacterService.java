@@ -32,8 +32,14 @@ public class CharacterService {
     }
 
     public void resetCharacterList(){
-        characters.clear();
+        characters.removeAll(characters);
         generateCharacterList();
+    }
+
+    public void resetCharactersOwners(){
+        for(Character character : characters){
+            character.setCurrentOwner(null);
+        }
     }
 
     public ArrayList<Character> getAllCharacters(){
@@ -89,7 +95,7 @@ public class CharacterService {
     //This is required because of starting rules. King cannot be shown to Players.
     private Character getNotAKingCharacterFromList() {
         Character character = getRandomCharacter(characters);
-        if (!(character.equals(new King())) && !(character.isDiscarded())) {
+        if (!character.equals(new King()) && !character.isDiscarded() && !character.isOnVisibleCharactersPile()) {
             return character;
         }
         return getNotAKingCharacterFromList();

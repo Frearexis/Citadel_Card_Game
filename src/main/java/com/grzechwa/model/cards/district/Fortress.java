@@ -14,4 +14,16 @@ public final class Fortress extends District {
                 true,
                 5);
     }
+
+    public boolean equals(Object o) {
+        if (!(o instanceof Fortress)) {
+            return false;
+        }
+        Fortress other = (Fortress) o;
+        return cardName.equals(other.cardName) && cardColor.equals(other.cardColor) && districtCost == other.districtCost;
+    }
+
+    public int hashCode() {
+        return cardName.hashCode();
+    }
 }

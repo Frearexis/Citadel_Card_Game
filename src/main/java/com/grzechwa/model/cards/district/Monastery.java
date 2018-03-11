@@ -14,4 +14,16 @@ public final class Monastery extends District {
                 true,
                 3);
     }
+
+    public boolean equals(Object o) {
+        if (!(o instanceof Monastery)) {
+            return false;
+        }
+        Monastery other = (Monastery) o;
+        return cardName.equals(other.cardName) && cardColor.equals(other.cardColor) && districtCost == other.districtCost;
+    }
+
+    public int hashCode() {
+        return cardName.hashCode();
+    }
 }

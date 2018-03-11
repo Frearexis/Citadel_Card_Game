@@ -14,4 +14,16 @@ public final class Town_Hall extends District {
                 true,
                 5);
     }
+
+    public boolean equals(Object o) {
+        if (!(o instanceof Town_Hall)) {
+            return false;
+        }
+        Town_Hall other = (Town_Hall) o;
+        return cardName.equals(other.cardName) && cardColor.equals(other.cardColor) && districtCost == other.districtCost;
+    }
+
+    public int hashCode() {
+        return cardName.hashCode();
+    }
 }
