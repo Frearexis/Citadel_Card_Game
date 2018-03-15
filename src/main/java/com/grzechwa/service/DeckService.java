@@ -2,27 +2,20 @@ package com.grzechwa.service;
 
 import com.grzechwa.model.Deck;
 import com.grzechwa.model.District;
-import com.grzechwa.model.Player;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 
 public class DeckService {
     private DeckCreator deckCreator;
     @Getter
+    @Setter
     private Deck deck;
 
     public DeckService(){
         this.deckCreator = new DeckCreator();
         this.deck = deckCreator.createStartingDeck();
-    }
-
-    public void addDistrictsToHand(Player player, int amount){
-        player.getDistrictsInHand().addAll(drawDistricts(amount));
-    }
-
-    public void removeDistrictsFromHand(Player player, ArrayList<District> districtsToRemove){
-        player.getDistrictsInHand().remove(districtsToRemove);
     }
 
     public ArrayList<District> drawDistricts(int amount){

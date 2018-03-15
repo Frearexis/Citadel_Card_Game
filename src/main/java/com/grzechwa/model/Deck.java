@@ -5,10 +5,9 @@ import lombok.Setter;
 
 import java.util.Stack;
 
-public abstract class Deck {
 
+public abstract class Deck {
     @Getter
-    @Setter
     protected Stack<District> districts = new Stack<>();
     @Setter
     protected static boolean Empty = false;

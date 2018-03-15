@@ -1,12 +1,10 @@
 package com.grzechwa.model.cards.character;
 
 import com.grzechwa.model.Character;
-import lombok.Data;
-import lombok.ToString;
+import lombok.Getter;
 
-@Data
-@ToString(callSuper=true)
 public final class Architect extends Character {
+    @Getter
     private static final String architectImagePath = "/card_images/characters/Architect.png";
     public Architect() {
         super("Architect",
@@ -17,16 +15,5 @@ public final class Architect extends Character {
                 false,
                 false,
                 false);
-    }
-    public boolean equals(Object o) {
-        if (!(o instanceof Architect)) {
-            return false;
-        }
-        Architect other = (Architect) o;
-        return cardName.equals(other.cardName) && cardColor.equals(other.cardColor);
-    }
-
-    public int hashCode() {
-        return cardName.hashCode();
     }
 }

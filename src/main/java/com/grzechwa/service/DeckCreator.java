@@ -1,12 +1,8 @@
 package com.grzechwa.service;
 
-import com.grzechwa.model.ClassicDeck;
+import com.grzechwa.model.decks.ClassicDeck;
 import com.grzechwa.model.Deck;
-import com.grzechwa.model.District;
-import com.grzechwa.model.cards.district.*;
 
-import java.util.Stack;
-import java.util.Arrays;
 import java.util.Collections;
 
 /*In future this Class will be responsible for creating decks based on players choice.

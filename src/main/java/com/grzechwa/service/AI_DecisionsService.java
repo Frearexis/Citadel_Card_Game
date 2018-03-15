@@ -2,28 +2,39 @@ package com.grzechwa.service;
 
 import com.grzechwa.model.District;
 import com.grzechwa.model.Player;
+import com.grzechwa.model.cards.character.King;
 
 import java.util.ArrayList;
 
 public class AI_DecisionsService {
-    private DeckService deckService;
     private PlayerService playerService;
     private DistrictService districtService;
+    private DeckService deckService;
     private BuildingService buildingService;
+    private KingshipService kingshipService;
     private KillingService killingService;
     private TheftService theftService;
     private DistrictDestroyingService districtDestroyingService;
     private DistrictSwappingService districtSwappingService;
 
-    public AI_DecisionsService(DeckService deckService, CharacterService characterService, PlayerService playerService){
-        this.deckService = deckService;
+    public AI_DecisionsService(PlayerService playerService,
+                               DistrictService districtService,
+                               DeckService deckService,
+                               BuildingService buildingService,
+                               KingshipService kingshipService,
+                               KillingService killingService,
+                               TheftService theftService,
+                               DistrictDestroyingService districtDestroyingService,
+                               DistrictSwappingService districtSwappingService){
         this.playerService = playerService;
-        this.districtService = new DistrictService();
-        this.buildingService = new BuildingService(playerService,districtService,this);
-        this.killingService = new KillingService(characterService);
-        this.theftService = new TheftService(playerService,characterService);
-        this.districtDestroyingService = new DistrictDestroyingService(playerService);
-        this.districtSwappingService = new DistrictSwappingService(deckService);
+        this.districtService = districtService;
+        this.deckService = deckService;
+        this.buildingService = buildingService;
+        this.kingshipService = kingshipService;
+        this.killingService = killingService;
+        this.theftService = theftService;
+        this.districtDestroyingService = districtDestroyingService;
+        this.districtSwappingService = districtSwappingService;
     }
 
     public void play(Player player){
@@ -57,7 +68,11 @@ public class AI_DecisionsService {
 
     private boolean shouldTakeDistrict(Player player){
         ArrayList<District> districts = playerService.getDistrictsPossibleToBuildWithExtraGold(player, 2);
-        if(player.getDistrictsInHand().isEmpty() || districts.isEmpty()){
+        if(player.getPlayerGold() <= 2){
+            return false;
+        }else if(player.getPlayerGold() >= 9){
+            return true;
+        }else if(player.getDistrictsInHand().isEmpty() || districts.isEmpty()){
             return true;
         }
         return false;
@@ -66,49 +81,61 @@ public class AI_DecisionsService {
     private boolean shouldTakeGoldForDistrictsBeforeBuild(Player player){
         ArrayList<District> districtsPTB = playerService.getDistrictsPossibleToBuild(player);
         ArrayList<District> districtsColored = districtService.getPlayerColorDistricts(player,districtsPTB);
-        return !districtsColored.isEmpty();
+        return districtsColored.isEmpty();
     }
 
     //Magician specific method
     public void takeDistrictsFromPlayerOrDeck(Player player){
-        Player playerWithHighestAmountOfDistrictsInHand = playerService.getPlayerWithHighestAmountOfDistrictsInHand(player);
-        if(playerWithHighestAmountOfDistrictsInHand.equals(player)){
+        Player playerWithDistrictsToSwap = playerService.getPlayerWithHighestAmountOfDistrictsInHand(player);
+        if(playerWithDistrictsToSwap.equals(player)){
             districtSwappingService.swapDistrictsWithDeck(player);
         }else{
-            districtSwappingService.swapDistrictsBetweenPlayers(player,playerWithHighestAmountOfDistrictsInHand);
+            districtSwappingService.swapDistrictsBetweenPlayers(player,playerWithDistrictsToSwap);
         }
     }
 
+    //Magician specific method
+    private boolean shouldBuildBeforeSwap(Player player){
+        ArrayList<District> districtsPossibleToBuild = playerService.getDistrictsPossibleToBuild(player);
+        if(buildingService.playerCanBuild(player,districtsPossibleToBuild)){
+            return true;
+        }
+        return false;
+    }
+
     public void printPlayerRoundSummary(Player player){
-        System.out.println(player.getPlayerName()+
-                " gold "+player.getPlayerGold()+
-                " dist in hand "+player.getDistrictsInHand().size()+
-                " finished dis count "+player.getFinishedDistrictsCounter()+
-                " finished dis size "+player.getFinishedDistricts().size());
+        System.out.printf("\n\n%s %s gold %d\nin hand: ",player.getPlayerName(),player.getChoosenCharacter(), player.getPlayerGold());
+        if(player.getDistrictsInHand().isEmpty()){
+            System.out.print("---Empty---");
+        }else{
+            player.getDistrictsInHand().forEach(s->System.out.printf("%s ", s));
+        }
+        System.out.printf("\nfinished districts %d: ",player.getFinishedDistrictsCounter());
+        if (player.getFinishedDistrictsCounter() == 0){
+            System.out.print("---Empty---");
+        }else{
+            player.getFinishedDistricts().forEach(s->System.out.printf("%s ", s));
+        }
+
     }
 
     private void playAsArchitect(Player player) {
-        System.out.println("Player Turn Start Statistics");
         printPlayerRoundSummary(player);
         player.addGold(2);
         buildingService.buildAsArchitect(player);
         player.addDistrictsToHand(deckService.drawDistricts(2));
-        System.out.println("End Turn");
         printPlayerRoundSummary(player);
     }
 
     private void playAsAssassin(Player player) {
-        System.out.println("Player Turn Start Statistics");
         printPlayerRoundSummary(player);
         killingService.killRandomCharacter();
         decideGoldOrDistrict(player);
-        buildingService.buildAsAssassin(player);
-        System.out.println("End Turn");
+        buildingService.buildExpensive(player);
         printPlayerRoundSummary(player);
     }
 
     private void playAsBishop(Player player) {
-        System.out.println("Player Turn Start Statistics");
         printPlayerRoundSummary(player);
         decideGoldOrDistrict(player);
         if(shouldTakeGoldForDistrictsBeforeBuild(player)){
@@ -116,12 +143,10 @@ public class AI_DecisionsService {
         }else{
             buildingService.buildBeforeGoldTaken(player);
         }
-        System.out.println("End Turn");
         printPlayerRoundSummary(player);
     }
 
     private void playAsGeneral(Player player) {
-        System.out.println("Player Turn Start Statistics");
         printPlayerRoundSummary(player);
         decideGoldOrDistrict(player);
         if(shouldTakeGoldForDistrictsBeforeBuild(player)){
@@ -130,12 +155,14 @@ public class AI_DecisionsService {
             buildingService.buildBeforeGoldTaken(player);
         }
         districtDestroyingService.basicDestroying(player);
-        System.out.println("End Turn");
         printPlayerRoundSummary(player);
     }
 
     private void playAsKing(Player player) {
-        System.out.println("Player Turn Start Statistics");
+        if (player.getChoosenCharacter().equals(new King()) && !player.isKing()) {
+            kingshipService.removeKing();
+            kingshipService.setKing(player);
+        }
         printPlayerRoundSummary(player);
         decideGoldOrDistrict(player);
         if(shouldTakeGoldForDistrictsBeforeBuild(player)){
@@ -143,21 +170,23 @@ public class AI_DecisionsService {
         }else{
             buildingService.buildBeforeGoldTaken(player);
         }
-        System.out.println("End Turn");
         printPlayerRoundSummary(player);
     }
 
     private void playAsMagician(Player player) {
-        System.out.println("Player Turn Start Statistics");
         printPlayerRoundSummary(player);
         player.addGold(2);
-        buildingService.buildAndSwapAsMagician(player);
-        System.out.println("End Turn");
+        if(shouldBuildBeforeSwap(player)){
+            buildingService.buildExpensive(player);
+            takeDistrictsFromPlayerOrDeck(player);
+        }else{
+            takeDistrictsFromPlayerOrDeck(player);
+            buildingService.buildExpensive(player);
+        }
         printPlayerRoundSummary(player);
     }
 
     private void playAsMerchant(Player player) {
-        System.out.println("Player Turn Start Statistics");
         printPlayerRoundSummary(player);
         decideGoldOrDistrict(player);
         player.addGold(1);
@@ -166,21 +195,18 @@ public class AI_DecisionsService {
         }else{
             buildingService.buildBeforeGoldTaken(player);
         }
-        System.out.println("End Turn");
         printPlayerRoundSummary(player);
     }
 
     private void playAsThief(Player player) {
-        System.out.println("Player Turn Start Statistics");
         printPlayerRoundSummary(player);
-        theftService.robRandomCharacter();
+        theftService.markRandomAsRobbed();
         decideGoldOrDistrict(player);
         if(shouldTakeGoldForDistrictsBeforeBuild(player)){
             buildingService.buildAfterGoldTaken(player);
         }else{
             buildingService.buildBeforeGoldTaken(player);
         }
-        System.out.println("End Turn");
         printPlayerRoundSummary(player);
     }
 }

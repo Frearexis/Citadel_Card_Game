@@ -1,12 +1,11 @@
 package com.grzechwa.model;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 @Getter
 @Setter
-@ToString(callSuper=true)
 public abstract class Character extends Card {
     private Player currentOwner;
     private int turnOfAppearance;
@@ -29,5 +28,10 @@ public abstract class Character extends Card {
                     this.isRobbed = isRobbed;
                     this.isDiscarded = isDiscarded;
                     this.isOnVisibleCharactersPile = isOnVisibleCharactersPile;
+    }
+
+    @Override
+    public String toString(){
+        return cardName;
     }
 }

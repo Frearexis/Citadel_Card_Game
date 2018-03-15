@@ -1,10 +1,8 @@
 package com.grzechwa.model;
 
-import lombok.Data;
-import lombok.ToString;
+import lombok.Getter;
 
-@Data
-@ToString
+@Getter
 public abstract class Card {
     protected String cardName;
     protected String cardColor;
@@ -15,5 +13,23 @@ public abstract class Card {
         this.cardName = cardName;
         this.cardColor = cardColor;
         this.isVisible = isVisible;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Card)) return false;
+
+        Card card = (Card) o;
+
+        if (!cardName.equals(card.cardName)) return false;
+        return cardColor.equals(card.cardColor);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = cardName.hashCode();
+        result = 31 * result + cardColor.hashCode();
+        return result;
     }
 }

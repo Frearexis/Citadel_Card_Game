@@ -1,5 +1,6 @@
-package com.grzechwa.model;
+package com.grzechwa.model.decks;
 
+import com.grzechwa.model.Deck;
 import com.grzechwa.model.cards.district.*;
 
 public final class ClassicDeck extends Deck {
@@ -16,6 +17,7 @@ public final class ClassicDeck extends Deck {
         fillDeckWithDistrict(new Manor(),5);
         fillDeckWithDistrict(new Market(),4);
         fillDeckWithDistrict(new Monastery(),3);
+        fillDeckWithDistrict(new Palace(), 3);
         fillDeckWithDistrict(new Prison(),3);
         fillDeckWithDistrict(new Tavern(),5);
         fillDeckWithDistrict(new Temple(),3);

@@ -1,13 +1,16 @@
 package com.grzechwa.model;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 
-@Data
+@Getter
+@Setter
 public class Player {
     private String playerName;
     private int playerGold;
@@ -18,6 +21,7 @@ public class Player {
     private int indexOnPlayersList;
     private int finalScore;
     private boolean firstWith8Districts;
+    private boolean nextWith8Districts;
     private boolean king;
     private boolean AI;
 
@@ -31,6 +35,7 @@ public class Player {
         this.finishedDistrictsCounter = 0;
         this.indexOnPlayersList = indexOnPlayersList;
         this.firstWith8Districts = false;
+        this.nextWith8Districts = false;
         this.king = false;
         this.AI = AI;
     }
@@ -40,7 +45,7 @@ public class Player {
     }
 
     public void removeGold(int amountToRemove){
-        playerGold+=amountToRemove;
+        playerGold-=amountToRemove;
     }
 
     public void addDistrictsToHand(ArrayList<District> districtsToAdd){
@@ -48,7 +53,7 @@ public class Player {
     }
 
     public void removeDistrictFromHand(District districtToRemove){
-        getDistrictsInHand().remove(districtToRemove);
+        districtsInHand.remove(districtToRemove);
     }
 
     public void addDistrictToFinished(District districtToAdd){

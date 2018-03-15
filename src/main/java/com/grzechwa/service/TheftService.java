@@ -16,13 +16,29 @@ public class TheftService {
         this.characterService = characterService;
     }
 
-    public void robRandomCharacter() {
+    public void markRandomAsRobbed() {
         Character robbedCharacter = characterService.getRandomCharacter(getCharactersPossibleToRob());
         for (Player player : playerService.getPlayers()) {
             if (player.getChoosenCharacter().equals(robbedCharacter)) {
                 player.getChoosenCharacter().setRobbed(true);
             }
         }
+    }
+
+    public void getGoldFromRobbed(Player robbedPlayer){
+        Player thief = playerService.getThiefPlayer(playerService.getPlayers());
+        thief.addGold(robbedPlayer.getPlayerGold());
+        robbedPlayer.setPlayerGold(0);
+    }
+
+    public void printThivery(Player prey){
+        Player thief = playerService.getThiefPlayer(playerService.getPlayers());
+        System.out.println("\n------Thievery---------");
+        System.out.printf(" %s rob character %s player %s from %d gold\n",
+                thief.getPlayerName(),
+                prey.getChoosenCharacter().getCardName(),
+                prey.getPlayerName(),prey.getPlayerGold());
+        System.out.println("-----------------------");
     }
 
     private ArrayList<Character> getCharactersPossibleToRob() {

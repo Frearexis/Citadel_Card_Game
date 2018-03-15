@@ -1,11 +1,9 @@
 package com.grzechwa.model.cards.district;
 
 import com.grzechwa.model.District;
-import lombok.Data;
-import lombok.ToString;
+import lombok.Getter;
 
-@Data
-@ToString(callSuper=true)
+@Getter
 public final class Fortress extends District {
     private static final String fortressImagePath = "/card_images/district/Fortress.png";
     public Fortress() {
@@ -13,17 +11,5 @@ public final class Fortress extends District {
                 "red",
                 true,
                 5);
-    }
-
-    public boolean equals(Object o) {
-        if (!(o instanceof Fortress)) {
-            return false;
-        }
-        Fortress other = (Fortress) o;
-        return cardName.equals(other.cardName) && cardColor.equals(other.cardColor) && districtCost == other.districtCost;
-    }
-
-    public int hashCode() {
-        return cardName.hashCode();
     }
 }

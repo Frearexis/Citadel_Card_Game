@@ -28,9 +28,9 @@ public class CountFinalScoreService {
 
     //For debuging in text mode
     public void printPlayerFinalSummary(Player player){
-        System.out.printf(" \n %s points for first with 8 %d \n points for next w8 %d \n points for districts %d \n all colors %d \n",
+        System.out.printf("\n\n%s points for first with 8 %d\n points for next w8 %d\n points for districts %d\n all colors %d\n",
                 player.getPlayerName(),
-                countPointsForNextWith8Districts(player),
+                countPointsForFirstWith8Districts(player),
                 countPointsForNextWith8Districts(player),
                 countPointsForDistrictsBuilded(player),
                 districtsInAllColorsBonus(player));
@@ -54,14 +54,14 @@ public class CountFinalScoreService {
     }
 
     private int districtsInAllColorsBonus(Player player){
-        boolean hasGoldDistrict = false;
+        boolean hasYellowDistrict = false;
         boolean hasPurpleDistrict = false;
         boolean hasGreenDistrict = false;
         boolean hasBlueDistrict = false;
         boolean hasRedDistrict = false;
         for(District district : player.getFinishedDistricts()){
             switch (district.getCardColor()){
-                case "gold":    hasGoldDistrict = true;
+                case "yellow":    hasYellowDistrict = true;
                     break;
                 case "purple":  hasPurpleDistrict = true;
                     break;
@@ -73,6 +73,6 @@ public class CountFinalScoreService {
                     break;
             }
         }
-        return (hasGoldDistrict && hasPurpleDistrict && hasGreenDistrict && hasBlueDistrict && hasRedDistrict) ? DISTRICTS_IN_ALL_COLORS_POINTS : 0;
+        return (hasYellowDistrict && hasPurpleDistrict && hasGreenDistrict && hasBlueDistrict && hasRedDistrict) ? DISTRICTS_IN_ALL_COLORS_POINTS : 0;
     }
 }

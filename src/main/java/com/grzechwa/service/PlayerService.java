@@ -5,21 +5,23 @@ import com.grzechwa.model.Player;
 import com.grzechwa.model.cards.character.Bishop;
 import com.grzechwa.model.cards.character.Thief;
 import com.grzechwa.model.comparators.DistrictsInHandComparator;
-import com.grzechwa.model.comparators.PlayersGoldComparator;
 import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Random;
 
 //TODO Implement various methods which will determine behaviour of AI players.
 public class PlayerService {
     @Getter
     private ArrayList<Player> players;
+    private KingshipService kingshipService;
     private Random random;
 
-    public PlayerService(ArrayList<Player> players){
+    public PlayerService(ArrayList<Player> players, KingshipService kingshipService){
         this.players = players;
+        this.kingshipService = kingshipService;
         this.random = new Random();
     }
 
@@ -40,6 +42,18 @@ public class PlayerService {
             }
         }
         return null;
+    }
+
+    public ArrayList<Player> getPlayersStartingFromKing(ArrayList<Player> players){
+        ArrayList<Player> orderedPlayersList = new ArrayList<>(players.subList(kingshipService.getKingIndex(),players.size()));
+        ArrayList<Player> secondPart = new ArrayList<>(players.subList(0,kingshipService.getKingIndex()));
+        orderedPlayersList.addAll(secondPart);
+        return orderedPlayersList;
+    }
+
+    public ArrayList<Player> getPlayersInOrderOfCharactersAppearance(ArrayList<Player> players){
+        players.sort(Comparator.comparing(player -> player.getChoosenCharacter().getTurnOfAppearance()));
+        return players;
     }
 
     public ArrayList<District> getDistrictsPossibleToBuildWithExtraGold(Player player, int amount){
@@ -116,16 +130,19 @@ public class PlayerService {
         return players.get(0).equals(askingPlayer) ? players.get(1):players.get(0);
     }
 
-    public Player getPlayerWithHighestAmountOfGold(Player askingPlayer){
-        Collections.sort(players, new PlayersGoldComparator());
-        return getPlayerOtherThenAskingOne(askingPlayer);
-    }
-
     public Player getPlayerWithHighestAmountOfDistrictsInHand(Player askingPlayer){
-        Collections.sort(players,new DistrictsInHandComparator());
-        if(players.get(0).equals(askingPlayer) && players.get(0).getDistrictsInHand().size() > players.get(1).getDistrictsInHand().size()){
+        ArrayList<Player> tempPlayers = new ArrayList<>(players);
+        Collections.sort(tempPlayers,Collections.reverseOrder(new DistrictsInHandComparator()));
+        if(tempPlayers.get(0).equals(askingPlayer) && tempPlayers.get(0).getDistrictsInHand().size() > tempPlayers.get(1).getDistrictsInHand().size()){
             return askingPlayer;
         }
-        return players.get(0);
+        return tempPlayers.get(0);
+    }
+
+    public boolean isFirstWith8DistrictsAmongPlayers(){
+        for(Player player : players){
+            if(player.isFirstWith8Districts()) return false;
+        }
+        return true;
     }
 }
