@@ -53,4 +53,3 @@ public class TheftService {
         return charactersToRob;
     }
 }
-

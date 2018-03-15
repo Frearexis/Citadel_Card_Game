@@ -3,6 +3,7 @@ package com.grzechwa.model;
 import com.grzechwa.service.*;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class GameInitializer {
     private PlayerService playerService;
@@ -41,7 +42,7 @@ public class GameInitializer {
 
     private void injectDependencies(){
         kingshipService = new KingshipService(players);
-        playerService = new PlayerService(players, kingshipService);
+        playerService = new PlayerService(players, kingshipService, new Random());
         characterService = new CharacterService();
         districtService = new DistrictService();
         killingService = new KillingService(characterService);

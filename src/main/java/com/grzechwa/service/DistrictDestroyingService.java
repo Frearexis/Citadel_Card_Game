@@ -12,7 +12,7 @@ public class DistrictDestroyingService {
         this.playerService = playerService;
     }
 
-    //for now General is looking for free destroying (Districts with cost 1) because of his ability.
+    //for now General is looking for free destroying (Districts with cost 1).
     public void basicDestroying(Player warlordPlayer){
         ArrayList<Player> ownersOfLowCostDistricts = playerService.getPlayersWithOneCostDistrictBuilded(warlordPlayer);
         if(ownersOfLowCostDistricts.size() > 0){

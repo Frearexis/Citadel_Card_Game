@@ -31,5 +31,4 @@ public class DistrictSwappingService {
         System.out.println("\tDistricts after " +askingPlayer.getDistrictsInHand().size());
         System.out.println("----------------------");
     }
-
 }

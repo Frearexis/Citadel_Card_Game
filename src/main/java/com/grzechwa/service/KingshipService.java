@@ -21,16 +21,6 @@ public class KingshipService {
         player.setKing(true);
     }
 
-    public Player getKing(){
-        Player tempPlayer = null;
-        for(Player player: players){
-            if (player.isKing()){
-                tempPlayer = player;
-            }
-        }
-        return tempPlayer;
-    }
-
     public int getKingIndex(){
         for(int i = 0; i < players.size(); i++){
             if (players.get(i).isKing()){

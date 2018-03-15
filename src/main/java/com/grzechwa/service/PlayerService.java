@@ -12,17 +12,16 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Random;
 
-//TODO Implement various methods which will determine behaviour of AI players.
 public class PlayerService {
     @Getter
     private ArrayList<Player> players;
     private KingshipService kingshipService;
     private Random random;
 
-    public PlayerService(ArrayList<Player> players, KingshipService kingshipService){
+    public PlayerService(ArrayList<Player> players, KingshipService kingshipService, Random random){
         this.players = players;
         this.kingshipService = kingshipService;
-        this.random = new Random();
+        this.random = random;
     }
 
     public void resetPlayersChoosenCharacters(){
@@ -87,17 +86,6 @@ public class PlayerService {
         return false;
     }
 
-    //It's not perfect yet as this method will always return the last player when it comes to tie.
-    public Player getPlayerWithHighestAmountOfDistrictsBuilded(Player askingPlayer){
-        Player playerWorthDestroying = getPlayerOtherThenAskingOne(askingPlayer);
-        for(Player player : players){
-            if(player.getFinishedDistrictsCounter() > playerWorthDestroying.getFinishedDistrictsCounter() && !player.equals(askingPlayer)) {
-                playerWorthDestroying = player;
-            }
-        }
-        return playerWorthDestroying;
-    }
-
     public ArrayList<Player> getPlayersWithOneCostDistrictBuilded(Player askingPlayer){
         ArrayList<Player> playersWithCheapestDistricts = new ArrayList<>();
         for(Player player : players){
@@ -124,10 +112,6 @@ public class PlayerService {
             return getRandomPlayer(playersWithLessThen8Districts);
         }
         return null;
-    }
-
-    private Player getPlayerOtherThenAskingOne(Player askingPlayer){
-        return players.get(0).equals(askingPlayer) ? players.get(1):players.get(0);
     }
 
     public Player getPlayerWithHighestAmountOfDistrictsInHand(Player askingPlayer){
