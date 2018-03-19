@@ -1,5 +1,7 @@
 package com.grzechwa.model;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,8 +13,8 @@ public class Player {
     private String playerName;
     private int playerGold;
     private Character choosenCharacter;
-    private ArrayList<District> districtsInHand;
-    private ArrayList<District> finishedDistricts;
+    private ObservableList<District> districtsInHand;
+    private ObservableList<District> finishedDistricts;
     private int finishedDistrictsCounter;
     private int indexOnPlayersList;
     private int finalScore;
@@ -22,12 +24,12 @@ public class Player {
     private boolean AI;
 
     public Player(){}
-    public Player(String name, int playerGold, ArrayList<District>  districtsInHand,int indexOnPlayersList, boolean AI){
+    public Player(String name, int playerGold, ObservableList<District> districtsInHand, int indexOnPlayersList, boolean AI){
         this.playerName = name;
         this.playerGold = playerGold;
         this.choosenCharacter = null;
         this.districtsInHand = districtsInHand;
-        this.finishedDistricts = new ArrayList<>();
+        this.finishedDistricts = FXCollections.observableList(new ArrayList<>());
         this.finishedDistrictsCounter = 0;
         this.indexOnPlayersList = indexOnPlayersList;
         this.firstWith8Districts = false;

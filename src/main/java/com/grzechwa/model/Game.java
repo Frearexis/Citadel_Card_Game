@@ -1,6 +1,7 @@
 package com.grzechwa.model;
 
 import com.grzechwa.service.*;
+import com.grzechwa.view_controller.GameController;
 import lombok.Setter;
 
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ public class Game {
     private TheftService theftService;
     private AI_DecisionsService ai_decisionsService;
     private CountFinalScoreService countFinalScoreService;
+    private GameController gameController;
     @Setter
     private boolean Ended = false;
 
@@ -18,12 +20,14 @@ public class Game {
                 CharacterService characterService,
                 TheftService theftService,
                 AI_DecisionsService ai_decisionsService,
-                CountFinalScoreService countFinalScoreService){
+                CountFinalScoreService countFinalScoreService,
+                GameController gameController){
         this.playerService = playerService;
         this.characterService = characterService;
         this.theftService = theftService;
         this.ai_decisionsService = ai_decisionsService;
         this.countFinalScoreService = countFinalScoreService;
+        this.gameController = gameController;
     }
 
     public boolean hasEnded(){
@@ -40,8 +44,13 @@ public class Game {
                 playersInOrderOfPlay.get(i).getChoosenCharacter().setCurrentOwner(playersInOrderOfPlay.get(i));
                 System.out.println(playersInOrderOfPlay.get(i).getPlayerName()+"\t choose " + playersInOrderOfPlay.get(i).getChoosenCharacter().getCardName());
             } else if (!playersInOrderOfPlay.get(i).isAI() && playersInOrderOfPlay.get(i).getChoosenCharacter() == null) {
-                    playersInOrderOfPlay.get(i).setChoosenCharacter(characterService.getRandomCharacterFromPossibleToPick());
-                    playersInOrderOfPlay.get(i).getChoosenCharacter().setCurrentOwner(playersInOrderOfPlay.get(i));
+
+                gameController.fillViewWithCharactersToPick(characterService.getCharactersPossibleToPick());
+                //while (playersInOrderOfPlay.get(i).getChoosenCharacter() == null);
+               /* playersInOrderOfPlay.get(i).setChoosenCharacter(characterService.getRandomCharacterFromPossibleToPick());
+                playersInOrderOfPlay.get(i).getChoosenCharacter().setCurrentOwner(playersInOrderOfPlay.get(i));
+                    //while choosen character == null -> game controller zwróci klikniętego charactera
+                    gameController.addDistrictsToPlayerHand(playersInOrderOfPlay.get(i).getDistrictsInHand()); */
                 System.out.println(playersInOrderOfPlay.get(i).getPlayerName()+"\t choose " + playersInOrderOfPlay.get(i).getChoosenCharacter().getCardName());
             }
         }

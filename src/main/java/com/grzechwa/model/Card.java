@@ -1,18 +1,19 @@
 package com.grzechwa.model;
 
+import javafx.scene.control.Button;
 import lombok.Getter;
 
 @Getter
-public abstract class Card {
+public abstract class Card extends Button {
     protected String cardName;
     protected String cardColor;
-    protected boolean isVisible;
+    protected boolean isVisibleC;
     protected static final String cardBackImagePath = "/card_images/back/Card_Back.png";
 
     public Card(String cardName, String cardColor, boolean isVisible) {
         this.cardName = cardName;
         this.cardColor = cardColor;
-        this.isVisible = isVisible;
+        this.isVisibleC = isVisible;
     }
 
     @Override

@@ -34,6 +34,13 @@ public class PlayerService {
         return customPlayerList.get(random.nextInt(customPlayerList.size()));
     }
 
+    public Player getHumanPlayer(){
+        for(Player player: players){
+            if(!player.isAI()) return player;
+        }
+        return null;
+    }
+
     public Player getThiefPlayer(ArrayList<Player> players){
         for(Player player : players){
             if(player.getChoosenCharacter().equals(new Thief())){

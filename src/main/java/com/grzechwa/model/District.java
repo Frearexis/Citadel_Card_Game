@@ -2,16 +2,19 @@ package com.grzechwa.model;
 
 import lombok.Getter;
 
+@Getter
 public abstract class District extends Card implements Comparable<District> {
-    @Getter
     protected int districtCost;
+    protected String imagePath;
 
     public District(String cardName,
                     String cardColor,
                     boolean isVisible,
-                    int districtCost){
+                    int districtCost,
+                    String imagePath){
         super(cardName,cardColor,isVisible);
         this.districtCost = districtCost;
+        this.imagePath = imagePath;
     }
 
     @Override

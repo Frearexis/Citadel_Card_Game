@@ -8,6 +8,7 @@ import lombok.Setter;
 public abstract class Character extends Card {
     private Player currentOwner;
     private int turnOfAppearance;
+    private String imagePath;
     private boolean isKilled;
     private boolean isRobbed;
     private boolean isDiscarded;
@@ -17,12 +18,14 @@ public abstract class Character extends Card {
                      String cardColor,
                      boolean isVisible,
                      int turnOfAppearance,
+                     String imagePath,
                      boolean isKilled,
                      boolean isRobbed,
                      boolean isDiscarded,
                      boolean isOnVisibleCharactersPile) {
                     super(cardName,cardColor,isVisible);
                     this.turnOfAppearance = turnOfAppearance;
+                    this.imagePath = imagePath;
                     this.isKilled = isKilled;
                     this.isRobbed = isRobbed;
                     this.isDiscarded = isDiscarded;
