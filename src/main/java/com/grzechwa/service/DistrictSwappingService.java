@@ -5,6 +5,7 @@ import com.grzechwa.model.Player;
 
 import java.util.ArrayList;
 
+//Magician ability specific class
 public class DistrictSwappingService {
     private DeckService deckService;
 
@@ -19,7 +20,7 @@ public class DistrictSwappingService {
         askingPlayer.setDistrictsInHand(targetPlayer.getDistrictsInHand());
         targetPlayer.setDistrictsInHand(helperList);
         System.out.println("\tDistricts after " +askingPlayer.getDistrictsInHand().size());
-        System.out.println("----------------------");
+        System.out.println("\n----------------------");
     }
 
     //For now it removes swapped districts from game later on they will be moved on bottom of deck
@@ -29,6 +30,6 @@ public class DistrictSwappingService {
         int amountToSwap = askingPlayer.getDistrictsInHand().size();
         askingPlayer.setDistrictsInHand(deckService.drawDistricts(amountToSwap));
         System.out.println("\tDistricts after " +askingPlayer.getDistrictsInHand().size());
-        System.out.println("----------------------");
+        System.out.println("\n----------------------");
     }
 }

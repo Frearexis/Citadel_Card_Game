@@ -2,7 +2,6 @@ package com.grzechwa.service;
 
 import com.grzechwa.model.Character;
 import com.grzechwa.model.cards.character.*;
-import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -49,7 +48,7 @@ public class CharacterService {
     public void generateCharactersToChooseFrom(){
         discardRandomCharacterFromCharacters();
         setRandomCharactersAsVisibleToAll(2);
-        System.out.println("Visible Characters ");
+        System.out.println("\nVisible Characters ");
             getVisibleCharacters().forEach(s->System.out.println("\t"+s.getCardName()));
         System.out.println("Characters possible to pick ");
         getCharactersPossibleToPick().forEach(s->System.out.println("\t"+s.getCardName()));

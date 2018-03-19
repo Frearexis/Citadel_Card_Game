@@ -21,7 +21,7 @@ public class DeckService {
     public ArrayList<District> drawDistricts(int amount){
         ArrayList<District> drawnDistricts = new ArrayList<>();
         if(deck.isEmpty()){
-            System.out.println("Koniec kart!"); //Alert do implementacji
+            System.out.println("End of cards!");
         }else if(deck.getDistricts().size() > amount){
             for(int i = 0; i < amount; i++){
                 drawnDistricts.add(deck.getDistricts().pop());
@@ -30,8 +30,8 @@ public class DeckService {
             while(!deck.isEmpty()){
                 drawnDistricts.add(deck.getDistricts().pop());
             }
-            deck.setEmpty(true);
-            System.out.println("Koniec kart!"); //Alert do implementacji
+            Deck.setEmpty(true);
+            System.out.println("End of cards!");
         }
         return drawnDistricts;
     }

@@ -7,6 +7,7 @@ import com.grzechwa.model.cards.character.Thief;
 
 import java.util.ArrayList;
 
+//Thief ability specific class
 public class TheftService {
     private PlayerService playerService;
     private CharacterService characterService;
@@ -38,7 +39,7 @@ public class TheftService {
                 thief.getPlayerName(),
                 prey.getChoosenCharacter().getCardName(),
                 prey.getPlayerName(),prey.getPlayerGold());
-        System.out.println("-----------------------");
+        System.out.println("\n-----------------------");
     }
 
     private ArrayList<Character> getCharactersPossibleToRob() {

@@ -70,7 +70,7 @@ public class AI_DecisionsService {
         ArrayList<District> districts = playerService.getDistrictsPossibleToBuildWithExtraGold(player, 2);
         if(player.getPlayerGold() <= 2){
             return false;
-        }else if(player.getPlayerGold() >= 9){
+        }else if(player.getPlayerGold() >= 8){
             return true;
         }else if(player.getDistrictsInHand().isEmpty() || districts.isEmpty()){
             return true;

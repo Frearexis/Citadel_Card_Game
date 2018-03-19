@@ -26,9 +26,8 @@ public class CountFinalScoreService {
         }
     }
 
-    //For debuging in text mode
     public void printPlayerFinalSummary(Player player){
-        System.out.printf("\n\n%s points for first with 8 %d\n points for next w8 %d\n points for districts %d\n all colors %d\n",
+        System.out.printf("\n\n%s Points for first with 8 districts finished %d\n points for next with 8 %d\n points for districts %d\n all colors bonus %d\n",
                 player.getPlayerName(),
                 countPointsForFirstWith8Districts(player),
                 countPointsForNextWith8Districts(player),

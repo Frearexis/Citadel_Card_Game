@@ -20,8 +20,8 @@ public class DistrictDestroyingService {
             if(playerWithDistrictToDestroy != null){
                 System.out.println("\n------District Destroying-------");
                 Collections.sort(playerWithDistrictToDestroy.getFinishedDistricts());
-                System.out.printf("Warlord destroys district %s player %s ",playerWithDistrictToDestroy.getFinishedDistricts().get(0).getCardName(),playerWithDistrictToDestroy.getPlayerName());
-                System.out.println("-----------------------");
+                System.out.printf("Warlord destroys %s of player %s ",playerWithDistrictToDestroy.getFinishedDistricts().get(0).getCardName(),playerWithDistrictToDestroy.getPlayerName());
+                System.out.println("\n-----------------------");
                 playerWithDistrictToDestroy.getFinishedDistricts().remove(0); //removeFromFinished
                 playerWithDistrictToDestroy.decrementFinishedDistrictsCounter();
             }
