@@ -42,13 +42,9 @@ public class BuildingService {
     }
 
     public int countGoldForDistrictsBuilded(Player player){
-        int colorMatchCounter = 0;
-        for(District district : player.getFinishedDistricts()){
-            if(player.getChoosenCharacter().getCardColor().equals(district.getCardColor())){
-                colorMatchCounter++;
-            }
-        }
-        return colorMatchCounter;
+        return (int)player.getFinishedDistricts().stream()
+                .filter(x -> player.getChoosenCharacter().getCardColor().equals(x.getCardColor()))
+                .count();
     }
 
     public void buildAsArchitect(Player player){
