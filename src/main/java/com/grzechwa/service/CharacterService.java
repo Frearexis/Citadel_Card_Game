@@ -6,6 +6,7 @@ import com.grzechwa.model.cards.character.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 public class CharacterService {
 
@@ -31,7 +32,7 @@ public class CharacterService {
     }
 
     public void resetCharacterList(){
-        characters.removeAll(characters);
+        characters.clear();
         generateCharacterList();
     }
 
@@ -55,13 +56,9 @@ public class CharacterService {
     }
 
     public ArrayList<Character> getVisibleCharacters(){
-        ArrayList<Character> charactersVisibleToAll = new ArrayList<>();
-        for(Character character : characters){
-            if(character.isOnVisibleCharactersPile()){
-                charactersVisibleToAll.add(character);
-            }
-        }
-        return charactersVisibleToAll;
+       return characters.stream()
+               .filter(Character::isOnVisibleCharactersPile)
+               .collect(Collectors.toCollection(ArrayList::new));
     }
 
     public boolean isCharacterOnVisiblePile(Character characterToCheck){
