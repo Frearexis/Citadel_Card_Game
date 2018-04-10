@@ -12,11 +12,9 @@ public class KillingService {
     }
 
     public void killRandomCharacter(){
-        Character character = characterService.getRandomCharacter(characterService.getAllCharacters() );
+        Character character = characterService.getRandomCharacter(characterService.getAllCharacters());
         if(character.isOnVisibleCharactersPile() || character.equals(new Assassin())){
             killRandomCharacter();
-        }else{
-            character.setKilled(true);
-            }
+        }else{character.setKilled(true);}
         }
     }

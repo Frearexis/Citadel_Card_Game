@@ -4,6 +4,7 @@ import com.grzechwa.model.Player;
 
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.stream.IntStream;
 
 public class KingshipService {
     private ArrayList<Player> players;
@@ -22,12 +23,10 @@ public class KingshipService {
     }
 
     public int getKingIndex(){
-        for(int i = 0; i < players.size(); i++){
-            if (players.get(i).isKing()){
-                return i;
-            }
-        }
-        return -1;
+        return IntStream.range(0, players.size())
+                .filter(i -> players.get(i).isKing())
+                .findFirst()
+                .getAsInt();
     }
 
     public void removeKing(){
