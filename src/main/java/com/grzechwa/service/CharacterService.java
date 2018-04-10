@@ -62,12 +62,8 @@ public class CharacterService {
     }
 
     public boolean isCharacterOnVisiblePile(Character characterToCheck){
-        for(Character character : getVisibleCharacters()){
-            if(character.equals(characterToCheck)){
-                return true;
-            }
-        }
-        return false;
+        return getVisibleCharacters().stream()
+                .anyMatch(c -> c.equals(characterToCheck));
     }
 
     public ArrayList<Character> getCharactersPossibleToPick(){
