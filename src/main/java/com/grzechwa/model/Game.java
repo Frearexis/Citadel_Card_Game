@@ -69,13 +69,13 @@ public class Game {
     }
 
     public void checkWinConditions(){
-        for(int i = 0; i < playerService.getPlayers().size(); i++){
-            if(playerService.getPlayers().get(i).getFinishedDistrictsCounter() == 8){
-                countFinalScoreService.countPointsForAllPlayers();
-                setEnded(true);
-                break;
-            }
-        }
+        playerService.getPlayers().stream()
+                .filter(x -> x.getFinishedDistrictsCounter() == 8)
+                .limit(1)
+                .forEach(x -> {
+                    countFinalScoreService.countPointsForAllPlayers();
+                    setEnded(true);
+                });
     }
 
     private void characterKilledPath(Player player){
