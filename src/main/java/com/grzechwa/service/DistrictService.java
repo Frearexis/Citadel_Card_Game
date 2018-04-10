@@ -5,6 +5,8 @@ import com.grzechwa.model.Player;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 public class DistrictService {
 
@@ -19,12 +21,8 @@ public class DistrictService {
     }
 
     public ArrayList<District> getPlayerColorDistricts(Player player, ArrayList<District> districts){
-        ArrayList<District> coloredDistricts = new ArrayList<>();
-        for(District district : districts){
-            if(district.getCardColor().equals(player.getChoosenCharacter().getCardColor())){
-                coloredDistricts.add(district);
-            }
-        }
-        return coloredDistricts;
+        return districts.stream()
+                .filter(d -> d.getCardColor().equals(player.getChoosenCharacter().getCardColor()))
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 }
