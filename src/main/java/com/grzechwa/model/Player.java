@@ -63,4 +63,8 @@ public class Player {
     public void decrementFinishedDistrictsCounter(){
         finishedDistrictsCounter--;
     }
+
+    public static boolean hasOneCostDistrictFinished(Player player){
+        return player.getFinishedDistricts().stream().anyMatch(d -> d.getDistrictCost() == 1);
+    }
 }

@@ -23,17 +23,21 @@ public class KingshipService {
     }
 
     public int getKingIndex(){
-        return IntStream.range(0, players.size())
+        /*return IntStream.range(0, players.size())
                 .filter(i -> players.get(i).isKing())
-                .findFirst()
+                .findFirst() //orElseGet
                 .getAsInt();
+                */
+       for(int i = 0; i < players.size(); i++){
+            if (players.get(i).isKing()){
+                return i;
+            }
+        }
+        return -1;
+
     }
 
     public void removeKing(){
-        for(Player player: players){
-            if (player.isKing()){
-                player.setKing(false);
-            }
-        }
+        players.stream().filter(Player::isKing).forEach(p -> p.setKing(false));
     }
 }

@@ -4,14 +4,17 @@ import lombok.Getter;
 
 public abstract class District extends Card implements Comparable<District> {
     @Getter
-    protected int districtCost;
+    private int districtCost;
+    private String imagePath;
 
     public District(String cardName,
                     String cardColor,
                     boolean isVisible,
-                    int districtCost){
+                    int districtCost,
+                    String imagePath){
         super(cardName,cardColor,isVisible);
         this.districtCost = districtCost;
+        this.imagePath = imagePath;
     }
 
     @Override

@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 public class PlayerService {
     @Getter
@@ -25,9 +26,7 @@ public class PlayerService {
     }
 
     public void resetPlayersChoosenCharacters(){
-        for(Player player : players){
-            player.setChoosenCharacter(null);
-        }
+        players.forEach(p -> p.setChoosenCharacter(null));
     }
 
     public Player getRandomPlayer(ArrayList<Player> customPlayerList){
@@ -35,18 +34,17 @@ public class PlayerService {
     }
 
     public Player getThiefPlayer(ArrayList<Player> players){
-        for(Player player : players){
-            if(player.getChoosenCharacter().equals(new Thief())){
-                return player;
-            }
-        }
-        return null;
+        return players.stream()
+                .filter(p -> p.getChoosenCharacter().equals(new Thief()))
+                .findFirst().orElseGet(null); //should be changed to orElseThrow
     }
 
     public ArrayList<Player> getPlayersStartingFromKing(ArrayList<Player> players){
+        players.forEach( x ->System.out.println(x.getPlayerName() + " " + x.isKing()));
         ArrayList<Player> orderedPlayersList = new ArrayList<>(players.subList(kingshipService.getKingIndex(),players.size()));
         ArrayList<Player> secondPart = new ArrayList<>(players.subList(0,kingshipService.getKingIndex()));
         orderedPlayersList.addAll(secondPart);
+        orderedPlayersList.forEach( x ->System.out.println(x.getPlayerName() + " " + x.isKing()));
         return orderedPlayersList;
     }
 
@@ -68,47 +66,31 @@ public class PlayerService {
     }
 
     public ArrayList<District> getDistrictsPossibleToBuild(Player player){
-        ArrayList<District> districtsPossibleToBuild = new ArrayList<>();
-        for(District districtInHand : player.getDistrictsInHand()){
-            if(player.getPlayerGold() >= districtInHand.getDistrictCost() && !(playerAlreadyFinishedDistrict(player,districtInHand))){
-                    districtsPossibleToBuild.add(districtInHand);
-                }
-        }
-        return districtsPossibleToBuild;
+        return player.getDistrictsInHand().stream()
+                .filter(d -> player.getPlayerGold() >= d.getDistrictCost())
+                .filter(d -> !playerAlreadyFinishedDistrict(player,d))
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     public boolean playerAlreadyFinishedDistrict(Player player, District district){
-        for(District dist : player.getFinishedDistricts()){
-            if(dist.equals(district)){
-                return true;
-            }
-        }
-        return false;
+       return player.getFinishedDistricts().stream()
+                .anyMatch(d -> d.equals(district));
     }
 
     public ArrayList<Player> getPlayersWithOneCostDistrictBuilded(Player askingPlayer){
-        ArrayList<Player> playersWithCheapestDistricts = new ArrayList<>();
-        for(Player player : players){
-            if(!player.equals(askingPlayer)) {
-                for (District district : player.getFinishedDistricts()) {
-                    if(district.getDistrictCost() == 1) {
-                        playersWithCheapestDistricts.add(player);
-                        break;
-                    }
-                }
-            }
-        }
-        return playersWithCheapestDistricts;
+        return players.stream()
+                .filter(p -> !p.equals(askingPlayer))
+                .filter(Player::hasOneCostDistrictFinished) //static method should be replaced
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     public Player getRandomPlayerPossibleToDestroy(ArrayList<Player> players){
         ArrayList<Player> playersWithLessThen8Districts = new ArrayList<>();
-        for(Player player : players){
-            if(player.getFinishedDistrictsCounter() < 8 && !(player.getChoosenCharacter().equals(new Bishop()))){
-                playersWithLessThen8Districts.add(player);
-            }
-        }
-        if(playersWithLessThen8Districts.size() > 0){
+        players.stream()
+                .filter(p -> p.getFinishedDistrictsCounter() < 8)
+                .filter(p -> !p.getChoosenCharacter().equals(new Bishop()))
+                .forEach(playersWithLessThen8Districts::add);
+        if(!playersWithLessThen8Districts.isEmpty()){
             return getRandomPlayer(playersWithLessThen8Districts);
         }
         return null;
@@ -123,10 +105,7 @@ public class PlayerService {
         return tempPlayers.get(0);
     }
 
-    public boolean isFirstWith8DistrictsAmongPlayers(){
-        for(Player player : players){
-            if(player.isFirstWith8Districts()) return false;
-        }
-        return true;
+    public boolean isFirstWith8DistrictsAmongPlayers() {
+        return players.stream().anyMatch(Player::isFirstWith8Districts);
     }
 }
